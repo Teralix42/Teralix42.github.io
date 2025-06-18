@@ -2,6 +2,14 @@
 layout: single
 title: "Teralabs by"
 permalink: /teralabs/
+classes: wide
+header:
+  overlay_color: "#000"
+  overlay_filter: "0.5"
+  overlay_image: /assets/images/terminal-bg.jpg
+  actions:
+    - label: "Return to Home"
+      url: "/"
 ---
 
 > “If it works, it’s production. If it doesn’t, it’s experimental.” — me, justifying everything on this page
