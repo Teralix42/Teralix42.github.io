@@ -43,6 +43,7 @@ footer:
 include:
   - .htaccess
   - _pages
+  - .well-known
 exclude:
   - vendor
   - Gemfile
