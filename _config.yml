@@ -7,7 +7,7 @@ enable_theme_toggle: true
 locale: "en-US"
 title: "Teralix"
 title_separator: " "
-subtitle: "Your favorite coder's webpage"
+subtitle: "Building tools no one asked for, but everyone will fear."
 name: "Teralix"
 description: "Sarcasm, scripts, and semi-useful tools"
 url: "https://teralix42.github.io"
@@ -35,6 +35,9 @@ footer:
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/Teralix42"
+    - label: "Discord"
+      icon: "fab fa-fw fa-discord"
+      url: "https://discord.com/users/1290618095416901663"
 
 # Reading Files
 include:
