@@ -1,7 +1,7 @@
 ---
 layout: single
-title: "🧪 Experiments"
-permalink: /lab/
+title: "Teralabs by"
+permalink: /teralabs/
 ---
 
 > “If it works, it’s production. If it doesn’t, it’s experimental.” — me, justifying everything on this page
@@ -26,7 +26,8 @@ Stuff so cursed, I didn’t even version-control it properly.
 - AI that controls a fan based on sarcasm levels
 - Malware that just opens Minesweeper on the target
 - Turing Machine that writes bad poetry
+- Much more(Yeah, I'm sorry. I'm still active)
 
 ---
 
-> **Disclaimer:** I'm in no case responsible for any damage to any computer who runs this code. Proceed with caution(it would be even wiser to not proceed).
+> **Disclaimer:** I'm in no case responsible for any damage to any computer that runs this code. Proceed with extreme caution(it would be even wiser to not proceed).
