@@ -1,9 +1,9 @@
-{% assign path = page.url | remove: '/' %}
-{% if path == "" %}
+{% assign path = page.url | downcase %}
+{% if path == "/" %}
   <li class="masthead__menu-item">
     <a href="/teralabs/">🧪 Teralabs</a>
   </li>
-{% else %}
+{% elsif path == "/teralabs/" %}
   <li class="masthead__menu-item">
     <a href="/">🏠 Home</a>
   </li>
