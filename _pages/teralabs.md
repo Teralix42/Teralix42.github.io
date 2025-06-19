@@ -11,7 +11,7 @@ header:
     - label: "Code"
       url: "/teralabs/#ongoing"
     - label: "Will crash"
-      url: "/teralabs/#pile"
+      url: "/teralabs/#other"
     - label: "Still cookin'"
       url: "/teralabs/#soon"
 ---
@@ -25,9 +25,9 @@ header:
 - **[OuroboAI](https://github.com/Teralix42?tab=repositories)** — Self-improving AI sandbox. The only thing left is to make an AI.
 - **[This website](https://github.com/Teralix42/Teralix42.github.io)** — Yeah, the one you're regretting ever having found.
 
-## Prototype Pile <a id="pile"></a>
+## Other "projects" <a id="other"></a>
 
-Stuff I'm to ashamed to dhare the code for.
+Stuff I'm to ashamed to share the code for.
 
 - **Arduino TARS** — Streams audio from an arduino to a GPU-powered STT-TTS engine. It only screams sometimes.
 - **Wifi Signal Matrix Visualizer** — Reads WiFi RSSI and draws it on the arduino r4 wifi's matrix. Managed to make that code 200 lines long.
