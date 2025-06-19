@@ -12,22 +12,14 @@
           {% if site.subtitle %}<span class="site-subtitle">{{ site.subtitle }}</span>{% endif %}
         </a>
         <ul class="visible-links">
-          {% assign path = page.url | downcase | replace:'index.html','/' %}
-          {% if path == "/" %}
-            <li class="masthead__menu-item">
-              <a href="/teralabs/">🧪 Teralabs</a>
-            </li>
-          {% elsif path == "/teralabs/" %}
-            <li class="masthead__menu-item">
-              <a href="/">🏠 Home</a>
-            </li>
+          {% assign path = page.path %}
+          {% if path == "index.html" %}
+            <li class="masthead__menu-item"><a href="/teralabs/">🧪 Teralabs</a></li>
+          {% elsif path == "teralabs.md" %}
+            <li class="masthead__menu-item"><a href="/">🏠 Home</a></li>
           {% else %}
-            <li class="masthead__menu-item">
-              <a href="/">🏠 Home</a>
-            </li>
-            <li class="masthead__menu-item">
-              <a href="/teralabs/">🧪 Teralabs</a>
-            </li>
+            <li class="masthead__menu-item"><a href="/">🏠 Home</a></li>
+            <li class="masthead__menu-item"><a href="/teralabs/">🧪 Teralabs</a></li>
           {% endif %}
         </ul>
         {% if site.search == true %}
