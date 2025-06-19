@@ -24,7 +24,7 @@ search: true
 # Author
 author:
   name: "Teralix"
-  bio: "15 y/o dev, Linux gremlin, Python punk, Powershell hacker."
+  bio: "15 y/o dev, Linux hacker, Python geek, Powershell dependency-hell lover."
   location: "Earth (unfortunately)"
   links:
     - label: "GitHub"
