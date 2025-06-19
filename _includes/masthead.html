@@ -16,16 +16,8 @@
           {{ site.masthead_title | default: site.title }}
           {% if site.subtitle %}<span class="site-subtitle">{{ site.subtitle }}</span>{% endif %}
         </a>
-        <ul class="visible-links">
-          {% assign path = page.path %}
-          {% if path == "index.html" %}
-            <li class="masthead__menu-item"><a href="/teralabs/">🧪 Teralabs</a></li>
-          {% elsif path == "teralabs.md" %}
-            <li class="masthead__menu-item"><a href="/">🏠 Home</a></li>
-          {% else %}
-            <li class="masthead__menu-item"><a href="/">🏠 Home</a></li>
-            <li class="masthead__menu-item"><a href="/teralabs/">🧪 Teralabs</a></li>
-          {% endif %}
+        <ul class="visible-links" id="nav-links-js">
+          <!-- This will be replaced by JavaScript -->
         </ul>
         {% if site.search == true %}
         <button class="search__toggle" type="button">
@@ -38,6 +30,22 @@
           <div class="navicon"></div>
         </button>
         <ul class="hidden-links hidden"></ul>
+        <script>
+          const path = window.location.pathname;
+          const nav = document.getElementById("nav-links-js");
+        
+          if (!nav) return;
+        
+          if (path === "/") {
+            nav.innerHTML = `<li class="masthead__menu-item"><a href="/teralabs/">🧪 Teralabs</a></li>`;
+          } else if (path.startsWith("/teralabs")) {
+            nav.innerHTML = `<li class="masthead__menu-item"><a href="/">🏠 Home</a></li>`;
+          } else {
+            nav.innerHTML = `
+              <li class="masthead__menu-item"><a href="/">🏠 Home</a></li>
+              <li class="masthead__menu-item"><a href="/teralabs/">🧪 Teralabs</a></li>`;
+          }
+        </script>
       </nav>
     </div>
   </div>
