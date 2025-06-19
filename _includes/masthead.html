@@ -12,7 +12,22 @@
           {% if site.subtitle %}<span class="site-subtitle">{{ site.subtitle }}</span>{% endif %}
         </a>
         <ul class="visible-links">
-          {% include custom-nav.html %}
+          {% if page.url == "/" %}
+            <li class="masthead__menu-item">
+              <a href="/teralabs/">🧪 Teralabs</a>
+            </li>
+          {% elsif page.url == "/teralabs/" %}
+            <li class="masthead__menu-item">
+              <a href="/">🏠 Home</a>
+            </li>
+          {% else %}
+            <li class="masthead__menu-item">
+              <a href="/">🏠 Home</a>
+            </li>
+            <li class="masthead__menu-item">
+              <a href="/teralabs/">🧪 Teralabs</a>
+            </li>
+          {% endif %}
         </ul>
         {% if site.search == true %}
         <button class="search__toggle" type="button">
