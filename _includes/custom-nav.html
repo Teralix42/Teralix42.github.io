@@ -1,5 +1,9 @@
-{% if page.url == "/" %}
-  <a href="/teralabs/">🧪 Teralabs</a>
-{% else %}
-  <a href="/">🏠 Home</a>
+{% if page.section == "home" %}
+  <li class="masthead__menu-item">
+    <a href="/teralabs/">🧪 Teralabs</a>
+  </li>
+{% elsif page.section == "teralabs" %}
+  <li class="masthead__menu-item">
+    <a href="/">🏠 Home</a>
+  </li>
 {% endif %}
