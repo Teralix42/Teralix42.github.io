@@ -1,6 +1,7 @@
 ---
 layout: splash
 title: "Teralabs"
+excerpt: "A place where you can find code that'll crash your computer, or occasionnaly(very rarely) work."
 permalink: /teralabs/
 classes: wide
 header:
@@ -14,12 +15,9 @@ header:
       url: "/teralabs/#pile"
     - label: "Still cookin'"
       url: "/teralabs/#soon"
-section: teralabs
 ---
 
 > **Disclaimer:** I'm in no case responsible for any damage to any computer that runs this code. Proceed with extreme caution(it would be even wiser to not proceed).
-
-Welcome to teralabs: a place where you can find code that'll crash your computer, or occasionnaly(very rarely) work.
 
 ## Ongoing Experiments <a id="ongoing"></a>
 
