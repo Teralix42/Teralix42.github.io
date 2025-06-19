@@ -1,4 +1,5 @@
-{% if page.permalink == "/" %}
+{% assign path = page.url | remove: '/' %}
+{% if path == "" %}
   <li class="masthead__menu-item">
     <a href="/teralabs/">🧪 Teralabs</a>
   </li>
