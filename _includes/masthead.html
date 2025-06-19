@@ -12,11 +12,12 @@
           {% if site.subtitle %}<span class="site-subtitle">{{ site.subtitle }}</span>{% endif %}
         </a>
         <ul class="visible-links">
-          {% if page.url == "/" %}
+          {% assign path = page.url | downcase | replace:'index.html','/' %}
+          {% if path == "/" %}
             <li class="masthead__menu-item">
               <a href="/teralabs/">🧪 Teralabs</a>
             </li>
-          {% elsif page.url == "/teralabs/" %}
+          {% elsif path == "/teralabs/" %}
             <li class="masthead__menu-item">
               <a href="/">🏠 Home</a>
             </li>
