@@ -1,41 +1,37 @@
 ---
 layout: single
-title: "Teralabs by"
+title: "Teralabs"
 permalink: /teralabs/
 classes: wide
 header:
   overlay_color: "#000"
   overlay_filter: "0.5"
   overlay_image: /assets/images/terminal-bg.jpg
-  actions:
-    - label: "Return to Home"
-      url: "/"
 ---
 
-> “If it works, it’s production. If it doesn’t, it’s experimental.” — me, justifying everything on this page
+> **Disclaimer:** I'm in no case responsible for any damage to any computer that runs this code. Proceed with extreme caution(it would be even wiser to not proceed).
 
-Welcome to da Lab: a dark corner of the internet where you can find code that *will* crash your computer, and occasionnaly something that works.
+Welcome to teralabs: a place where you can find code that'll crash your computer, or occasionnaly(very rarely) work.
 
 ## 🔬 Ongoing Experiments
 
-- **[SnarkOS](/snarkos/)** — Sarcastic neural assistant. Answers your questions and roasts your life choices.
+- **[SnarkOS](/snarkos/)** — A terminal based AI assistant. Answers your questions and roasts your life choices.
 - **[PowerScan](/powerscan/)** — A “totally harmless” network scanner that might alert your ISP.
-- **[OuroboroAI](/powerscan/)** — Self-mangling AI experiments. Part genius, part curse.
+- **[OuroboAI](/ouroboai/)** — Self-improving AI experiments. Part genius, part curse.
 
 ## ☠️ Prototype Pile
 
-Stuff so cursed, I didn’t even version-control it properly.
+Stuff so cursed, I'm nor showing the code for these.
 
-- **TTS from Arduino** — Stream audio from a microcontroller to a GPU-powered STT-TTS engine. It only screams sometimes. Supposed to end up looking like TARS...
-- **Wifi Signal Matrix Visualizer** — Reads your soul through WiFi RSSI and draws it in LED chaos. Way to embarrased to share *that* code.
+- **TTS from Arduino** — Streams audio from an arduino to a GPU-powered STT-TTS engine. It only screams sometimes. Supposed to end up looking like TARS...
+- **Wifi Signal Matrix Visualizer** — Reads your soul through WiFi RSSI and draws it on the arduino r4 wifi's matrix. Way to embarrased to share *that* code.
 
 ## 🛠️ Coming Soon (Or Never)
 
-- AI that controls a fan based on sarcasm levels
 - Malware that just opens Minesweeper on the target
 - Turing Machine that writes bad poetry
 - Much more(Yeah, I'm sorry. I'm still active)
 
 ---
 
-> **Disclaimer:** I'm in no case responsible for any damage to any computer that runs this code. Proceed with extreme caution(it would be even wiser to not proceed).
+> “If it works, it’s production. If it doesn’t, it’s experimental.” — me, justifying everything on this page
