@@ -14,6 +14,7 @@ header:
       url: "/teralabs/#pile"
     - label: "Still cookin'"
       url: "/teralabs/#soon"
+section: teralabs
 ---
 
 > **Disclaimer:** I'm in no case responsible for any damage to any computer that runs this code. Proceed with extreme caution(it would be even wiser to not proceed).
