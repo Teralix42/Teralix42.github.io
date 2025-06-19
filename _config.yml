@@ -3,6 +3,11 @@ remote_theme: "mmistakes/minimal-mistakes"
 minimal_mistakes_skin: "dark"
 enable_theme_toggle: true
 
+# Button Setting
+navigation: custom
+masthead_links:
+  custom: custom-nav
+
 # Site Settings
 locale: "en-US"
 title: "Teralix"
