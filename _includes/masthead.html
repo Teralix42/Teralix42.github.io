@@ -17,7 +17,10 @@
           {% if site.subtitle %}<span class="site-subtitle">{{ site.subtitle }}</span>{% endif %}
         </a>
         <ul class="visible-links" id="nav-links-js">
-          <!-- This will be replaced by JavaScript -->
+          <noscript>
+            <li class="masthead__menu-item"><a href="/">🏠 Home</a></li>
+            <li class="masthead__menu-item"><a href="/teralabs/">🧪 Teralabs</a></li>
+          </noscript>
         </ul>
         {% if site.search == true %}
         <button class="search__toggle" type="button">
@@ -33,9 +36,23 @@
         <script>
           const path = window.location.pathname;
           const nav = document.getElementById("nav-links-js");
-        
-          if (!nav) return;
-        
+
+          if (!nav) {
+          	console.warn("Navigation element not found. Skipping dynamic nav.");
+          } else {
+          	const path = window.location.pathname;
+            
+          	if (path === "/") {
+          		nav.innerHTML = `<li class="masthead__menu-item"><a href="/teralabs/">🧪 Teralabs</a></li>`;
+          	} else if (path.startsWith("/teralabs")) {
+          		nav.innerHTML = `<li class="masthead__menu-item"><a href="/">🏠 Home</a></li>`;
+          	} else {
+          		nav.innerHTML = `
+          			<li class="masthead__menu-item"><a href="/">🏠 Home</a></li>
+          			<li class="masthead__menu-item"><a href="/teralabs/">🧪 Teralabs</a></li>`;
+          	}
+          }
+          
           if (path === "/") {
             nav.innerHTML = `<li class="masthead__menu-item"><a href="/teralabs/">🧪 Teralabs</a></li>`;
           } else if (path.startsWith("/teralabs")) {
