@@ -1,7 +1,7 @@
 ---
 layout: splash
 title: "Teralabs"
-excerpt: "A place where you can find code that'll crash your computer, or occasionnaly(very rarely) work."
+excerpt: "A place where you can find code that occasionnaly(never actually) works."
 permalink: /teralabs/
 classes: wide
 header:
@@ -10,34 +10,36 @@ header:
   actions:
     - label: "Code"
       url: "/teralabs/#ongoing"
-    - label: "Will crash"
+    - label: "Ewwwww-code"
       url: "/teralabs/#other"
     - label: "Still cookin'"
       url: "/teralabs/#soon"
 ---
 
-> **Disclaimer:** I am in no case responsible for any damage to any computer that runs this code. Proceed running this code with extreme caution(it would be even wiser to not proceed).
+> **Disclaimer:** Everything here is experimental, best enjoyed on a non-essential device. Or not at all.
 
 ## Ongoing Experiments <a id="ongoing"></a>
 
 - **[SnarkOS](https://github.com/Teralix42?tab=repositories)** — A terminal based AI assistant. Answers your questions(rarely) while roasting you(always).
-- **[PowerScan](https://github.com/Teralix42?tab=repositories)** — A “totally harmless” network scanner that may or may not destroy it in the process.
+- **[PowerScan](https://github.com/Teralix42?tab=repositories)** — A network scanner that occasionnaly orders a pizza through it.
 - **[OuroboAI](https://github.com/Teralix42?tab=repositories)** — Self-improving AI sandbox. The only thing left is to make an AI.
 - **[This website](https://github.com/Teralix42/Teralix42.github.io)** — Yeah, the one you're regretting ever having found.
 
 ## Other "projects" <a id="other"></a>
 
-Stuff I'm to ashamed to share the code for.
+Stuff the code of is to ugly to share.
 
-- **Arduino TARS** — Streams audio from an arduino to a GPU-powered STT-TTS engine. It only screams sometimes.
-- **Wifi Signal Matrix Visualizer** — Reads WiFi RSSI and draws it on the arduino r4 wifi's matrix. Managed to make that code 200 lines long.
+- **Arduino TARS** — Streams audio from an arduino to a GPU-powered STT-TTS engine. Answers 10 to 20 minutes after you ask your question.
+- **Wifi Signal Matrix Visualizer** — Reads WiFi RSSI and draws it on the arduino r4 wifi's matrix. Somehow ended up 400 lines long.
+- **Binary clock** — Displays time in binary on arduino r4 led matrix, overall just looks horrible.
+- **Neural Automata** — A cellular automata made of neural nets, written in glsl. 100+ hours of error messages.
 
 ## Coming Soon (Or Never) <a id="soon"></a>
 
-- Malware that just opens Minesweeper on the target
-- Turing Machine that codes AIs in python
+- SCP time loop game(no comments)
+- Turing Machine web simulator
 - Discord quote bot('cause why not)
-- Much more(Yeah, I'm sorry. I'm still active)
+- Much more. Yep, I'm sorry. I'm still active
 
 ---
 
