@@ -3,16 +3,13 @@ remote_theme: "mmistakes/minimal-mistakes"
 minimal_mistakes_skin: "dark"
 enable_theme_toggle: true
 
-# Button Setting
-navigation: custom
-masthead_links:
-  custom: custom-nav
-
-# Site Settings
+# Head of the page
 locale: "en-US"
 title: "Teralix42"
 title_separator: " "
 subtitle: "Building tools no one asked for, but everyone will fear."
+logo: /assets/images/logo.png
+
 name: "Teralix"
 description: "15 y/o dev you'll regret ever talking to"
 url: "https://teralix42.github.io"
