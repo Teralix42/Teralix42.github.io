@@ -26,7 +26,11 @@
           {% for p in site.pages %}
             {% assign first = p.path | split: "/" | first %}
             {% if first == "_pages" and p.url != current_path %}
-              <li class="masthead__menu-item"><a href="{{ p.url }}">{{ p.title | default: p.slug | capitalize }}</a></li>
+              <li class="masthead__menu-item">
+                <a href="{{ p.url }}">
+                  {{ p.button | default: p.title | default: p.slug | capitalize }}
+                </a>
+              </li>
             {% endif %}
           {% endfor %}
         </ul>
