@@ -28,7 +28,13 @@
             {% if first == "_pages" and p.url != current_path %}
               <li class="masthead__menu-item">
                 <a href="{{ p.url }}">
-                  {{ p.button | default: p.title | default: p.slug | capitalize }}
+                  {% if p.button %}
+                    {{ p.button }}
+                  {% elsif p.title %}
+                    {{ p.title }}
+                  {% else %}
+                    {{ p.slug | capitalize }}
+                  {% endif %}
                 </a>
               </li>
             {% endif %}
