@@ -1,7 +1,10 @@
 # Theme Settings
 remote_theme: "mmistakes/minimal-mistakes"
-minimal_mistakes_skin: "terminal"
+minimal_mistakes_skin: "dark"
 enable_theme_toggle: true
+
+enable_copy_code_button: true
+search: true
 
 # Head of the page
 locale: "en-US"
@@ -9,14 +12,10 @@ title: "Teralix42"
 title_separator: " "
 subtitle: "Building tools no one asked for, but everyone will fear."
 logo: /assets/images/logo.png
-
 name: "Teralix"
-description: "15 y/o dev you'll regret ever talking to"
 url: "https://teralix42.github.io"
 baseurl: ""
 repository: "Teralix42/Teralix42.github.io"
-enable_copy_code_button: true
-search: true
 
 # Author
 author:
@@ -43,22 +42,18 @@ footer:
 
 # Reading Files
 include:
-  - .htaccess
   - _pages
-  - .well-known
-exclude:
-  - vendor
-  - Gemfile
-  - Gemfile.lock
-  - node_modules
-  - tmp
-  - "*.sublime-project"
-  - "*.sublime-workspace"
 
 # Conversion
 markdown: kramdown
 highlighter: rouge
 excerpt_separator: "\n\n"
+
+# HTML Compression
+compress_html:
+  clippings: all
+  ignore:
+    envs: development
 
 # Sass/SCSS
 sass:
@@ -79,30 +74,3 @@ plugins:
   - jekyll-sitemap
   - jekyll-feed
   - jekyll-include-cache
-
-# Archives
-category_archive:
-  type: liquid
-  path: /categories/
-tag_archive:
-  type: liquid
-  path: /tags/
-
-# HTML Compression
-compress_html:
-  clippings: all
-  ignore:
-    envs: development
-
-# Defaults
-defaults:
-  - scope:
-      path: ""
-      type: posts
-    values:
-      layout: single
-      author_profile: true
-      read_time: true
-      comments: false
-      share: true
-      related: true
