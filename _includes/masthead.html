@@ -25,19 +25,22 @@
           {% endif %}
           {% for p in site.pages %}
             {% assign first = p.path | split: "/" | first %}
-            {% if first == "_pages" and p.url != current_path %}
-              <li class="masthead__menu-item">
-                <a href="{{ p.url }}">
-                  {% if p.button %}
-                    {{ p.button }}
-                  {% elsif p.title %}
-                    {{ p.title }}
-                  {% else %}
-                    {{ p.slug | capitalize }}
-                  {% endif %}
-                </a>
-              </li>
-            {% endif %}
+            {% assign filename = p.path | split: "/" | last %}
+            {% unless filename startswith "_" or p.url == current_path %}
+              {% if first == "_pages" %}
+                <li class="masthead__menu-item">
+                  <a href="{{ p.url }}">
+                    {% if p.button %}
+                      {{ p.button }}
+                    {% elsif p.title %}
+                      {{ p.title }}
+                    {% else %}
+                      {{ p.slug | capitalize }}
+                    {% endif %}
+                  </a>
+                </li>
+              {% endif %}
+            {% endunless %}
           {% endfor %}
         </ul>
         {% if site.search == true %}
