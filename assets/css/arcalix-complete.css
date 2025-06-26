@@ -4,9 +4,10 @@
 	background-color: #111;
 	color: lime;
 	padding: 20px;
-	border-radius: 0;
+	border-radius: 5px; /* Slight rounding */
 	margin-top: 20px;
-	box-shadow: 0 0 5px rgba(0, 255, 0, 0.4);
+	box-shadow: 0 0 5px rgba(0, 255, 0, 0.4); /* Softer glow */
+	border: 2px solid lime; /* Matching prompt border */
 }
 
 /* Custom prompt styling */
