@@ -72,9 +72,9 @@ function loadLeaderboard() {
 		return;
 	}
 
-	let content = `<pre>Rank  Name     Score\n`;
+	let content = `<pre>Rank    Name    Score\n`;
 	leaderboard.forEach((entry, i) => {
-		const rank = `${i + 1}.`.padEnd(6, ' ');
+		const rank = `${i + 1}.`.padEnd(8, ' ');
 		const name = entry.initials.padEnd(8, ' ');
 		const score = `${entry.time}s`;
 		content += `${rank}${name}${score}\n`;
