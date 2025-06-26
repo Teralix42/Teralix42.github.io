@@ -40,8 +40,8 @@ function showInitialsPrompt(time) {
 
 // Function to close the custom prompt
 function closePrompt() {
-  const promptBox = document.getElementById("initials-prompt");
-  promptBox.remove();
+	const prompt = document.querySelector('.custom-prompt');
+	if (prompt) prompt.remove();
 }
 
 // Function to add the user's score to the leaderboard
@@ -78,13 +78,14 @@ function loadLeaderboard() {
 		return;
 	}
 
-	let content = `<pre>Rank  Name  Score\n`;
+	let content = `<pre>Rank  Name   Score\n`;
 
 	leaderboard.forEach((entry, index) => {
-		const rank = String(index + 1).padEnd(5, ' ');
-		const name = entry.initials.padEnd(6, ' ');
-		const time = `${entry.time}s`;
-		content += `${rank}${name}${time}\n`;
+		const rankStr = `${index + 1}.`;
+		const rankPad = rankStr.padEnd(6, ' '); // Enough for "100."
+		const namePad = entry.initials.padEnd(7, ' '); // Make names same width
+		const timeStr = `${entry.time}s`;
+		content += `${rankPad}${namePad}${timeStr}\n`;
 	});
 
 	content += `</pre>`;
