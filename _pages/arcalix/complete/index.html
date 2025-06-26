@@ -5,6 +5,8 @@ permalink: /arcalix/complete/
 button: "_"
 ---
 
+<link rel="stylesheet" href="/assets/css/arcalix-complete.css">
+
 <script>
   if (localStorage.getItem("arcalix_clearance") !== "true") {
     window.location.href = "/arcalix/";
@@ -12,7 +14,9 @@ button: "_"
 </script>
 
 <section>
-  <h1>You've completed the Arcalix trials!</h1>
+  <h1 style="font-family: 'Courier New', monospace; color: lime;">
+    CLEARANCE GRANTED: You've completed the Arcalix trials!
+  </h1>
   
   <!-- Display total time taken to complete the trials -->
   <p id="final-time">Your total time: ...</p>
