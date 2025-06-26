@@ -1,47 +1,66 @@
-/* Retro Leaderboard */
 #leaderboard {
-  font-family: 'Courier New', monospace;
-  background-color: #111;
-  color: lime;
-  padding: 20px;
-  border-radius: 10px;
-  margin-top: 20px;
-  box-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+	font-family: 'Courier New', monospace;
+	background-color: #111;
+	color: lime;
+	padding: 20px;
+	border-radius: 0;
+	margin-top: 20px;
+	box-shadow: 0 0 5px rgba(0, 255, 0, 0.4);
+	background-image: repeating-linear-gradient(
+		0deg,
+		#111,
+		#111 1px,
+		#0f0 1px,
+		#0f0 2px
+	);
+	background-size: 100% 4px; /* Fake scanlines */
 }
 
-/* Custom prompt styling */
 .custom-prompt {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #222;
-  color: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
-  text-align: center;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background-color: #111;
+	color: #0f0;
+	padding: 20px;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+	text-align: center;
+	border: 2px solid lime;
+	font-family: 'Courier New', monospace;
 }
 
 .custom-prompt input {
-  margin: 10px 0;
-  padding: 5px;
-  font-size: 18px;
-  border-radius: 5px;
-  border: 2px solid #0f0;
-  background-color: #000;
-  color: lime;
+	margin: 10px 0;
+	padding: 5px;
+	font-size: 18px;
+	border-radius: 5px;
+	border: 2px solid #0f0;
+	background-color: #000;
+	color: lime;
+	box-shadow: 0 0 3px rgba(0, 255, 0, 0.3);
 }
 
 .custom-prompt button {
-  margin: 5px;
-  padding: 10px 20px;
-  font-size: 18px;
-  background-color: #0f0;
-  color: black;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+	margin: 5px;
+	padding: 10px 20px;
+	font-size: 18px;
+	background-color: #0f0;
+	color: black;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: transform 0.1s ease-in-out, filter 0.1s ease-in-out;
+}
+
+.custom-prompt button:hover {
+	background-color: #0c0;
+}
+
+.custom-prompt button:active {
+	transform: scale(0.98);
+	filter: brightness(0.95);
 }
 
 .custom-prompt button:hover {
