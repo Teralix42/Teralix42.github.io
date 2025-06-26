@@ -1,29 +1,35 @@
 ---
 layout: splash
-title: "Arcalix"
+title: "Project Arcalix Completion"
 permalink: /arcalix/complete/
-excerpt: "You've completed the trials!"
+button: "_"
 ---
 
 <script>
-	if (localStorage.getItem("arcalix_clearance") !== "true") {
-		window.location.href = "/arcalix/";
-	}
+  if (localStorage.getItem("arcalix_clearance") !== "true") {
+    window.location.href = "/arcalix/";
+  }
 </script>
 
 <section>
-	<h1>Trials cleared!</h1>
-	<p id="final-time">Your total time: ...</p>
+  <h1>You've completed the Arcalix trials!</h1>
+  
+  <!-- Display total time taken to complete the trials -->
+  <p id="final-time">Your total time: ...</p>
 
-	<div class="arc-buttons">
-		<button id="add-score-btn">Add My Score</button>
-		<button id="join-team-btn">Join the Team</button>
-	</div>
+  <div class="arc-buttons">
+    <!-- Button to add score to leaderboard -->
+    <button id="add-score-btn">Add My Score</button>
+    
+    <!-- Button to join the team (collect contact info) -->
+    <button id="join-team-btn">Join the Team</button>
+  </div>
 
-	<hr>
+  <hr>
 
-	<h2>Nerds Who Made It</h2>
-	<div id="leaderboard">Loading leaderboard...</div>
+  <h2>Nerds Who Made It</h2>
+  <!-- Leaderboard display section -->
+  <div id="leaderboard">Loading leaderboard...</div>
 </section>
 
 <script src="/assets/js/arcalix-complete.js"></script>
