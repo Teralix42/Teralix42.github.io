@@ -110,11 +110,20 @@ function addScore(initials, time) {
 	showPopup("Score submitted!");
 }
 
+function escapeHTML(str) {
+	return str.replace(/[&<>"']/g, c => ({
+		'&': "&amp;",
+		'<': "&lt;",
+		'>': "&gt;",
+		'"': "&quot;",
+		"'": "&#039;"
+	})[c]);
+}
+
 function loadLeaderboard() {
 	const leaderboard = JSON.parse(localStorage.getItem("leaderboard") || "[]");
 	const leaderboardElement = document.getElementById("leaderboard");
 	const latest = localStorage.getItem("latest_initials");
-	const highlightEnabled = !!latest;
 
 	if (!leaderboard.length) {
 		leaderboardElement.innerHTML = "No scores yet.";
@@ -124,22 +133,17 @@ function loadLeaderboard() {
 	let content = `<pre>Rank    Name    Time    | Flappy  Pong    Space   Pacman  Tetris  | Total\n`;
 
 	leaderboard.forEach((entry, i) => {
-		const isYou = highlightEnabled && entry.initials === latest;
-		const tag = isYou ? `<span class="highlight">` : ``;
+		const isYou = latest === entry.initials;
+		const line =
+			`${String(i + 1).padEnd(8)}${escapeHTML(entry.initials).padEnd(8)}${(entry.time + "s").padEnd(8)}| ` +
+			`${String(entry.flappy).padEnd(8)}${String(entry.pong).padEnd(8)}${String(entry.space).padEnd(8)}` +
+			`${String(entry.pacman).padEnd(8)}${String(entry.tetris).padEnd(8)}| ` +
+			`${entry.flappy + entry.pong + entry.space + entry.pacman + entry.tetris}\n`;
 
-		const rank = `${i + 1}.`.padEnd(8);
-		const name = entry.initials.padEnd(8);
-		const time = `${entry.time}s`.padEnd(8);
-		const flappy = String(entry.flappy).padEnd(8);
-		const pong = String(entry.pong).padEnd(8);
-		const space = String(entry.space).padEnd(8);
-		const pacman = String(entry.pacman).padEnd(8);
-		const tetris = String(entry.tetris).padEnd(8);
-		const total = entry.flappy + entry.pong + entry.space + entry.pacman + entry.tetris;
-
-		content += `${tag}${rank}${name}${time}| ${flappy}${pong}${space}${pacman}${tetris}| ${total}${tag}</pre>`;
+		content += isYou ? `<span class="highlight">${line}</span>` : line;
 	});
 
+	content += `</pre>`;
 	leaderboardElement.innerHTML = content;
 }
 
