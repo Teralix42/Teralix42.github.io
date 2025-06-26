@@ -1,0 +1,38 @@
+/* ==========================================================================
+   Terminal skin
+   ========================================================================== */
+
+/* Base colors */
+$background-color           : #000000 !default;
+$text-color                 : #00ff00 !default;
+$muted-text-color           : #0f400f !default;
+$primary-color              : #00ff00 !default;
+$border-color               : #00ff00 !default;
+$footer-background-color    : #000000 !default;
+$footer-text-color          : #00ff00 !default;
+
+/* Code blocks */
+$code-background-color      : #111111 !default;
+$code-background-color-dark : #080808 !default;
+$code-text-color            : #00ff00 !default;
+
+/* Masthead & links */
+$link-color                 : #00ff00 !default;
+$link-color-hover           : #66ff66 !default;
+$link-color-visited         : #33cc33 !default;
+$masthead-link-color        : #00ff00 !default;
+$masthead-link-color-hover  : #66ff66 !default;
+$navicon-link-color         : #00ff00 !default;
+$navicon-link-color-hover   : #66ff66 !default;
+
+/* Notices */
+$notice-background-mix      : 90% !default;
+$code-notice-background-mix : 95% !default;
+
+/* Social icons inherit this glowstick vibe */
+.author__urls.social-icons i,
+.author__urls.social-icons .svg-inline--fa,
+.page__footer-follow .social-icons i,
+.page__footer-follow .social-icons .svg-inline--fa {
+	color: inherit;
+}
