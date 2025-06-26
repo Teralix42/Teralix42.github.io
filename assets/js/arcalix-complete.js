@@ -10,19 +10,31 @@ window.onload = function () {
 	document.getElementById("add-score-btn").addEventListener("click", () => {
 		createPrompt("Enter your initials (3 letters):", "ABC", "Submit", (val) => {
 			if (!val || val.length !== 3) return alert("Exactly 3 letters, genius.");
-			addScore(val.toUpperCase(), totalTime);
-		});
+			const safeInitials = val.toUpperCase().replace(/[^A-Z]/g, "").slice(0, 3);
+			addScore(safeInitials, totalTime);
+			localStorage.setItem("latest_initials", safeInitials); // so we can highlight it
+		}, true); // true = force uppercase & letter-only
 	});
 
 	document.getElementById("join-team-btn").addEventListener("click", () => {
 		showContactTogglePrompt();
 	});
 
+	const adminBtn = document.getElementById("clear-leaderboard-btn");
+	if (adminBtn) {
+		adminBtn.addEventListener("click", () => {
+			if (confirm("Are you *really* sure you want to nuke the leaderboard?")) {
+				localStorage.removeItem("leaderboard");
+				loadLeaderboard();
+			}
+		});
+	}
+
 	loadLeaderboard();
 };
 
 // Generic reusable prompt
-function createPrompt(title, placeholder, submitText, submitCallback) {
+function createPrompt(title, placeholder, submitText, submitCallback, forceUpperLetters = false) {
 	closePrompt();
 
 	const promptBox = document.createElement("div");
@@ -39,8 +51,16 @@ function createPrompt(title, placeholder, submitText, submitCallback) {
 
 	document.body.appendChild(promptBox);
 
+	const inputEl = document.getElementById("custom-input");
+
+	if (forceUpperLetters) {
+		inputEl.addEventListener("input", () => {
+			inputEl.value = inputEl.value.toUpperCase().replace(/[^A-Z]/g, "").slice(0, 3);
+		});
+	}
+
 	document.getElementById("submit-btn").onclick = () => {
-		const val = document.getElementById("custom-input").value.trim();
+		const val = inputEl.value.trim();
 		submitCallback(val);
 	};
 
@@ -52,23 +72,48 @@ function closePrompt() {
 	if (existing) existing.remove();
 }
 
-// Score logic
+// Escape anything sneaky
+function escapeHTML(str) {
+	return str.replace(/[&<>"']/g, c => ({
+		'&': "&amp;",
+		'<': "&lt;",
+		'>': "&gt;",
+		'"': "&quot;",
+		"'": "&#039;"
+	})[c]);
+}
+
 function addScore(initials, time) {
 	const leaderboard = JSON.parse(localStorage.getItem("leaderboard") || "[]");
 
-	// Placeholder for now — replace 0s with real scores when you have them
-	const entry = {
-		initials,
-		time,
-		flappy: parseInt(localStorage.getItem("flappy_score") || 0),
-		pong: parseInt(localStorage.getItem("pong_score") || 0),
-		space: parseInt(localStorage.getItem("space_score") || 0),
-		pacman: parseInt(localStorage.getItem("pacman_score") || 0),
-		tetris: parseInt(localStorage.getItem("tetris_score") || 0)
-	};
+	const flappy = parseInt(localStorage.getItem("flappy_score") || 0);
+	const pong = parseInt(localStorage.getItem("pong_score") || 0);
+	const space = parseInt(localStorage.getItem("space_score") || 0);
+	const pacman = parseInt(localStorage.getItem("pacman_score") || 0);
+	const tetris = parseInt(localStorage.getItem("tetris_score") || 0);
+	const total = flappy + pong + space + pacman + tetris;
 
-	leaderboard.push(entry);
-	leaderboard.sort((a, b) => a.time - b.time);
+	const existing = leaderboard.find(e => e.initials === initials);
+	if (existing) {
+		const oldTotal = existing.flappy + existing.pong + existing.space + existing.pacman + existing.tetris;
+		if (total > oldTotal) {
+			existing.time = time;
+			existing.flappy = flappy;
+			existing.pong = pong;
+			existing.space = space;
+			existing.pacman = pacman;
+			existing.tetris = tetris;
+		}
+	} else {
+		leaderboard.push({ initials, time, flappy, pong, space, pacman, tetris });
+	}
+
+	leaderboard.sort((a, b) => {
+		const aTotal = a.flappy + a.pong + a.space + a.pacman + a.tetris;
+		const bTotal = b.flappy + b.pong + b.space + b.pacman + b.tetris;
+		return bTotal - aTotal;
+	});
+
 	localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
 	loadLeaderboard();
 	closePrompt();
@@ -78,35 +123,37 @@ function addScore(initials, time) {
 function loadLeaderboard() {
 	const leaderboard = JSON.parse(localStorage.getItem("leaderboard") || "[]");
 	const leaderboardElement = document.getElementById("leaderboard");
+	const latest = localStorage.getItem("latest_initials");
 
 	if (!leaderboard.length) {
 		leaderboardElement.innerHTML = "No scores yet.";
 		return;
 	}
 
-	let content = `<pre>Rank    Name    Time  |  Flappy  Pong  Space  Pacman  Tetris    Total\n`;
+	let content = `<pre>Rank    Name    Time    | Flappy  Pong    Space   Pacman  Tetris  | Total\n`;
 
 	leaderboard.forEach((entry, i) => {
+		const isYou = latest && entry.initials === latest;
+		const tagOpen = isYou ? `<span class="highlight">` : ``;
+		const tagClose = isYou ? `</span>` : ``;
+
 		const rank = `${i + 1}.`.padEnd(8);
-		const name = entry.initials.padEnd(8);
-		const time = `${entry.time}s`.padEnd(9);
-
+		const name = escapeHTML(entry.initials).padEnd(8);
+		const time = `${entry.time}s`.padEnd(8);
 		const flappy = String(entry.flappy).padEnd(8);
-		const pong = String(entry.pong).padEnd(6);
-		const space = String(entry.space).padEnd(7);
+		const pong = String(entry.pong).padEnd(8);
+		const space = String(entry.space).padEnd(8);
 		const pacman = String(entry.pacman).padEnd(8);
-		const tetris = String(entry.tetris).padEnd(10);
-
+		const tetris = String(entry.tetris).padEnd(8);
 		const total = entry.flappy + entry.pong + entry.space + entry.pacman + entry.tetris;
 
-		content += `${rank}${name}${time}${flappy}${pong}${space}${pacman}${tetris}${total}\n`;
+		content += `${tagOpen}${rank}${name}${time}| ${flappy}${pong}${space}${pacman}${tetris}| ${total}${tagClose}\n`;
 	});
 
 	content += `</pre>`;
 	leaderboardElement.innerHTML = content;
 }
 
-// Toggle prompt between email and Discord
 function showContactTogglePrompt() {
 	closePrompt();
 
@@ -144,14 +191,12 @@ function showContactTogglePrompt() {
 		if (!val) return alert("Try entering something this time.");
 
 		if (useDiscord) {
-			// Simple Discord check (not perfect, just enough)
 			if (!/^.+#\d{4}$/.test(val)) return alert("That's not a Discord tag, Einstein.");
 		} else {
-      // Gmail/Hotmail mail check
 			if (!/@(gmail|hotmail)\.com$/i.test(val)) return alert("Only Gmail and Hotmail addresses are accepted, because reasons.");
 		}
 
-		localStorage.setItem("team_contact", val);
+		localStorage.setItem("team_contact", escapeHTML(val));
 		closePrompt();
 		showPopup("Contact info submitted!");
 	};
@@ -159,7 +204,6 @@ function showContactTogglePrompt() {
 	document.getElementById("cancel-contact").onclick = closePrompt;
 }
 
-// Basic popup
 function showPopup(message) {
 	const popup = document.createElement("div");
 	popup.className = "custom-popup";
