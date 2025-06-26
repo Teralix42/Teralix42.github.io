@@ -1,123 +1,129 @@
-// Check if the user has completed the trials and redirect if not
+// Redirect if trials weren't completed
 if (localStorage.getItem("arcalix_clearance") !== "true") {
-  window.location.href = "/arcalix/";
+	window.location.href = "/arcalix/";
 }
 
 window.onload = function () {
-  // Display total time
-  const totalTime = localStorage.getItem("total_time");
-  document.getElementById("final-time").textContent = `Your total time: ${totalTime}s`;
+	const totalTime = localStorage.getItem("total_time");
+	document.getElementById("final-time").textContent = `Your total time: ${totalTime}s`;
 
-  // Handle "Add My Score"
-  document.getElementById("add-score-btn").onclick = function () {
-    showInitialsPrompt(totalTime);
-  };
+	document.getElementById("add-score-btn").addEventListener("click", () => {
+		createPrompt("Enter your initials (3 letters):", "ABC", "Submit", (val) => {
+			if (!val || val.length !== 3) return alert("Exactly 3 letters, genius.");
+			addScore(val.toUpperCase(), totalTime);
+		});
+	});
 
-  // Handle "Join the Team"
-  document.getElementById("join-team-btn").onclick = function () {
-    showContactPrompt();
-  };
+	document.getElementById("join-team-btn").addEventListener("click", () => {
+		showContactTogglePrompt();
+	});
 
-  // Load the leaderboard
-  loadLeaderboard();
+	loadLeaderboard();
 };
 
-// Function to show custom initials prompt
-function showInitialsPrompt(time) {
-  const promptBox = document.createElement("div");
-  promptBox.id = "initials-prompt";
-  promptBox.className = "custom-prompt";
+// Generic reusable prompt
+function createPrompt(title, placeholder, submitText, submitCallback) {
+	closePrompt(); // Kill duplicates
 
-  promptBox.innerHTML = `
-    <h3>Enter your initials (3 letters):</h3>
-    <input type="text" id="initials-input" maxlength="3" autofocus>
-    <button onclick="addScore(document.getElementById('initials-input').value, ${time})">Submit</button>
-    <button onclick="closePrompt()">Cancel</button>
-  `;
-  
-  document.body.appendChild(promptBox);
+	const promptBox = document.createElement("div");
+	promptBox.className = "custom-prompt";
+
+	promptBox.innerHTML = `
+		<h3>${title}</h3>
+		<input type="text" id="custom-input" placeholder="${placeholder}" autofocus>
+		<div class="btn-group">
+			<button id="submit-btn">${submitText}</button>
+			<button id="cancel-btn">Cancel</button>
+		</div>
+	`;
+
+	document.body.appendChild(promptBox);
+
+	document.getElementById("submit-btn").onclick = () => {
+		const val = document.getElementById("custom-input").value.trim();
+		submitCallback(val);
+	};
+
+	document.getElementById("cancel-btn").onclick = closePrompt;
 }
 
-// Function to close the custom prompt
+// Close any existing prompt
 function closePrompt() {
-	const prompt = document.querySelector('.custom-prompt');
-	if (prompt) prompt.remove();
+	const existing = document.querySelector('.custom-prompt');
+	if (existing) existing.remove();
 }
 
-// Function to add the user's score to the leaderboard
+// Leaderboard logic
 function addScore(initials, time) {
-  // If initials are invalid (empty or not 3 characters), don't submit
-  if (!initials || initials.length !== 3) {
-    alert("Please enter exactly 3 letters for your initials.");
-    return;
-  }
-
-  // This is a placeholder — save to Firebase or JSON here
-  const leaderboard = JSON.parse(localStorage.getItem("leaderboard") || "[]");
-
-  leaderboard.push({ initials: initials.toUpperCase(), time: time });
-  leaderboard.sort((a, b) => a.time - b.time); // Sort by fastest time
-
-  // Update leaderboard in localStorage
-  localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
-
-  // Reload leaderboard
-  loadLeaderboard();
-
-  // Close prompt
-  closePrompt();
+	const leaderboard = JSON.parse(localStorage.getItem("leaderboard") || "[]");
+	leaderboard.push({ initials, time });
+	leaderboard.sort((a, b) => a.time - b.time);
+	localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
+	loadLeaderboard();
+	closePrompt();
 }
 
-// Function to load the leaderboard in a retro style
 function loadLeaderboard() {
 	const leaderboard = JSON.parse(localStorage.getItem("leaderboard") || "[]");
 	const leaderboardElement = document.getElementById("leaderboard");
 
-	if (leaderboard.length === 0) {
+	if (!leaderboard.length) {
 		leaderboardElement.innerHTML = "No scores yet.";
 		return;
 	}
 
-	let content = `<pre>Rank  Name   Score\n`;
-
-	leaderboard.forEach((entry, index) => {
-		const rankStr = `${index + 1}.`;
-		const rankPad = rankStr.padEnd(7, ' '); // Enough for "100."
-		const namePad = entry.initials.padEnd(7, ' '); // Make names same width
-		const timeStr = `${entry.time}s`;
-		content += `${rankPad}${namePad}${timeStr}\n`;
+	let content = `<pre>Rank  Name     Score\n`;
+	leaderboard.forEach((entry, i) => {
+		const rank = `${i + 1}.`.padEnd(6, ' ');
+		const name = entry.initials.padEnd(8, ' ');
+		const score = `${entry.time}s`;
+		content += `${rank}${name}${score}\n`;
 	});
-
 	content += `</pre>`;
+
 	leaderboardElement.innerHTML = content;
 }
 
-// Function to show custom prompt for "Join the Team"
-function showContactPrompt() {
-  const promptBox = document.createElement("div");
-  promptBox.id = "contact-prompt";
-  promptBox.className = "custom-prompt";
+// Email/Discord toggle prompt
+function showContactTogglePrompt() {
+	closePrompt();
 
-  promptBox.innerHTML = `
-    <h3>Enter your email or Discord username:</h3>
-    <input type="text" id="contact-input" autofocus>
-    <button onclick="joinTeam(document.getElementById('contact-input').value)">Submit</button>
-    <button onclick="closePrompt()">Cancel</button>
-  `;
-  
-  document.body.appendChild(promptBox);
-}
+	let useDiscord = false;
 
-// Function to handle joining the team (email or Discord)
-function joinTeam(contactMethod) {
-  // Save the contact method (this is a placeholder, would integrate with a backend like Formspree)
-  if (!contactMethod) {
-    alert("Please enter a valid email or Discord username.");
-    return;
-  }
+	const promptBox = document.createElement("div");
+	promptBox.className = "custom-prompt";
 
-  localStorage.setItem("team_contact", contactMethod);
-  alert("You’ll be contacted soon (if we feel like it).");
+	promptBox.innerHTML = `
+		<h3 id="contact-title">Enter your email:</h3>
+		<input type="text" id="contact-input" placeholder="you@example.com" autofocus>
+		<div class="btn-group">
+			<button id="submit-contact">Submit</button>
+			<button id="cancel-contact">Cancel</button>
+			<button id="toggle-contact" style="margin-left:auto;">Use Discord Instead</button>
+		</div>
+		<small>We might reach out. Or not. Life's full of disappointments.</small>
+	`;
 
-  closePrompt();
+	document.body.appendChild(promptBox);
+
+	const titleEl = document.getElementById("contact-title");
+	const inputEl = document.getElementById("contact-input");
+	const toggleBtn = document.getElementById("toggle-contact");
+
+	toggleBtn.onclick = () => {
+		useDiscord = !useDiscord;
+		titleEl.textContent = useDiscord ? "Enter your Discord username:" : "Enter your email:";
+		inputEl.placeholder = useDiscord ? "user#0000" : "you@example.com";
+		toggleBtn.textContent = useDiscord ? "Use Email Instead" : "Use Discord Instead";
+	};
+
+	document.getElementById("submit-contact").onclick = () => {
+		const val = inputEl.value.trim();
+		if (!val) return alert("Try entering something this time.");
+		localStorage.setItem("team_contact", val);
+		alert("You might hear from us. Maybe. Probably not.");
+		closePrompt();
+	};
+
+	document.getElementById("cancel-contact").onclick = closePrompt;
 }
