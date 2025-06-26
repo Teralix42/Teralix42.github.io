@@ -1,6 +1,6 @@
 ---
 layout: splash
-title: "Project Arcalix Completion"
+title: "Arcalix trials complete!"
 permalink: /arcalix/complete/
 button: "_"
 ---
@@ -8,32 +8,40 @@ button: "_"
 <link rel="stylesheet" href="/assets/css/arcalix-complete.css">
 
 <script>
-  if (localStorage.getItem("arcalix_clearance") !== "true") {
-    window.location.href = "/arcalix/";
-  }
+	if (localStorage.getItem("arcalix_clearance") !== "true") {
+		window.location.href = "/arcalix/";
+	}
 </script>
 
+<!-- HEADER SECTION -->
+<section style="text-align:center; font-family: 'Courier New', monospace; color: lime;">
+	<h1 style="font-size: 2.5em; text-shadow: 0 0 5px #0f0;">CLEARANCE GRANTED</h1>
+	<h2 style="margin-top: -10px;">You've completed the Arcalix trials!</h2>
+	<p id="final-time" style="font-size: 1.5em; margin: 10px 0;">Your total time: ...</p>
+	<button id="add-score-btn" class="arc-btn">🕹️ Submit Score</button>
+</section>
+
+<hr>
+
+<!-- LEADERBOARD -->
 <section>
-  <h1 style="font-family: 'Courier New', monospace; color: lime;">
-    CLEARANCE GRANTED: You've completed the Arcalix trials!
-  </h1>
-  
-  <!-- Display total time taken to complete the trials -->
-  <p id="final-time">Your total time: ...</p>
+	<h2 style="font-family: 'Courier New', monospace;">🏆 Nerds Who Made It</h2>
+	<div id="leaderboard">Loading leaderboard...</div>
+</section>
 
-  <div class="arc-buttons">
-    <!-- Button to add score to leaderboard -->
-    <button id="add-score-btn">Add My Score</button>
-    
-    <!-- Button to join the team (collect contact info) -->
-    <button id="join-team-btn">Join the Team</button>
-  </div>
+<hr>
 
-  <hr>
+<!-- INFO + JOIN BUTTON -->
+<section>
+	<h2>🎮 About Project Arcalix</h2>
+	<p>
+	Project ARCALIX is a secret vault of games for the nostalgic. You’ve just experienced a part of that dream of mine — now you’re worthy of joining the team.
+	</p>
+	<p>
+	We(I) are building a vault of free retro games and minigames, with the original styles and controls to relive the gaming glory period. If you're into games, irony, and nostalgia-fueled dev chaos… you belong here.
+	</p>
 
-  <h2>Nerds Who Made It</h2>
-  <!-- Leaderboard display section -->
-  <div id="leaderboard">Loading leaderboard...</div>
+	<button id="join-team-btn" class="arc-btn">🧠 Join the team</button>
 </section>
 
 <script src="/assets/js/arcalix-complete.js"></script>
