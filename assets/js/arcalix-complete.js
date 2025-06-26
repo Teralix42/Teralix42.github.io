@@ -82,7 +82,7 @@ function loadLeaderboard() {
 
 	leaderboard.forEach((entry, index) => {
 		const rankStr = `${index + 1}.`;
-		const rankPad = rankStr.padEnd(6, ' '); // Enough for "100."
+		const rankPad = rankStr.padEnd(7, ' '); // Enough for "100."
 		const namePad = entry.initials.padEnd(7, ' '); // Make names same width
 		const timeStr = `${entry.time}s`;
 		content += `${rankPad}${namePad}${timeStr}\n`;
