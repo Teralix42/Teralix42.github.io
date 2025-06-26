@@ -12,20 +12,13 @@ window.onload = function () {
 			if (!val || val.length !== 3) return alert("Exactly 3 letters, genius.");
 
 			// Block HTML injection
-			if (/</.test(val) || />/.test(val)) {
-				alert("Nice try.");
-				return;
-			}
-
 			const safeInitials = val.toUpperCase().replace(/[^A-Z]/g, "").slice(0, 3);
 			localStorage.setItem("latest_initials", safeInitials); // for highlight
 			addScore(safeInitials, totalTime);
-		}, true);
+		});
 	});
 
-	document.getElementById("join-team-btn").addEventListener("click", () => {
-		showContactTogglePrompt();
-	});
+	document.getElementById("join-team-btn").addEventListener("click", showContactTogglePrompt);
 
 	const adminBtn = document.getElementById("clear-leaderboard-btn");
 	if (adminBtn) {
@@ -42,7 +35,7 @@ window.onload = function () {
 };
 
 // Generic reusable prompt
-function createPrompt(title, placeholder, submitText, submitCallback, forceUpperLetters = false) {
+function createPrompt(title, placeholder, submitText, submitCallback) {
 	closePrompt();
 
 	const promptBox = document.createElement("div");
@@ -60,11 +53,9 @@ function createPrompt(title, placeholder, submitText, submitCallback, forceUpper
 	document.body.appendChild(promptBox);
 	const inputEl = document.getElementById("custom-input");
 
-	if (forceUpperLetters) {
-		inputEl.addEventListener("input", () => {
-			inputEl.value = inputEl.value.toUpperCase().replace(/[^A-Z]/g, "").slice(0, 3);
-		});
-	}
+	inputEl.addEventListener("input", () => {
+		inputEl.value = inputEl.value.toUpperCase().replace(/[^A-Z]/g, "").slice(0, 3);
+	});
 
 	document.getElementById("submit-btn").onclick = () => {
 		const val = inputEl.value.trim();
@@ -84,16 +75,6 @@ function createPrompt(title, placeholder, submitText, submitCallback, forceUpper
 function closePrompt() {
 	const existing = document.querySelector('.custom-prompt');
 	if (existing) existing.remove();
-}
-
-function escapeHTML(str) {
-	return str.replace(/[&<>"']/g, c => ({
-		'&': "&amp;",
-		'<': "&lt;",
-		'>': "&gt;",
-		'"': "&quot;",
-		"'": "&#039;"
-	})[c]);
 }
 
 function addScore(initials, time) {
@@ -121,11 +102,7 @@ function addScore(initials, time) {
 		leaderboard.push({ initials, time, flappy, pong, space, pacman, tetris });
 	}
 
-	leaderboard.sort((a, b) => {
-		const aTotal = a.flappy + a.pong + a.space + a.pacman + a.tetris;
-		const bTotal = b.flappy + b.pong + b.space + b.pacman + b.tetris;
-		return bTotal - aTotal;
-	});
+	leaderboard.sort((a, b) => (b.flappy + b.pong + b.space + b.pacman + b.tetris) - (a.flappy + a.pong + a.space + a.pacman + a.tetris));
 
 	localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
 	loadLeaderboard();
@@ -148,11 +125,10 @@ function loadLeaderboard() {
 
 	leaderboard.forEach((entry, i) => {
 		const isYou = highlightEnabled && entry.initials === latest;
-		const tagOpen = isYou ? `<span class="highlight">` : ``;
-		const tagClose = isYou ? `</span>` : ``;
+		const tag = isYou ? `<span class="highlight">` : ``;
 
 		const rank = `${i + 1}.`.padEnd(8);
-		const name = escapeHTML(entry.initials).padEnd(8);
+		const name = entry.initials.padEnd(8);
 		const time = `${entry.time}s`.padEnd(8);
 		const flappy = String(entry.flappy).padEnd(8);
 		const pong = String(entry.pong).padEnd(8);
@@ -161,10 +137,9 @@ function loadLeaderboard() {
 		const tetris = String(entry.tetris).padEnd(8);
 		const total = entry.flappy + entry.pong + entry.space + entry.pacman + entry.tetris;
 
-		content += `${tagOpen}${rank}${name}${time}| ${flappy}${pong}${space}${pacman}${tetris}| ${total}${tagClose}\n`;
+		content += `${tag}${rank}${name}${time}| ${flappy}${pong}${space}${pacman}${tetris}| ${total}${tag}</pre>`;
 	});
 
-	content += `</pre>`;
 	leaderboardElement.innerHTML = content;
 }
 
@@ -201,7 +176,13 @@ function showContactTogglePrompt() {
 	};
 
 	document.getElementById("submit-contact").onclick = () => {
-		const val = inputEl.value.trim();
+		let val = inputEl.value.trim();
+
+		// Check for HTML injection
+		if (/</.test(val) || />/.test(val)) {
+			alert("Nice try.");
+			return;
+		}
 
 		if (!val) return alert("Try entering something this time.");
 
@@ -211,7 +192,7 @@ function showContactTogglePrompt() {
 			if (!/@(gmail|hotmail)\.com$/i.test(val)) return alert("Only Gmail and Hotmail addresses are accepted, because reasons.");
 		}
 
-		localStorage.setItem("team_contact", escapeHTML(val));
+		localStorage.setItem("team_contact", val);
 		closePrompt();
 		showPopup("Contact info submitted!");
 	};
