@@ -20,28 +20,30 @@
         </a>
         {% assign current_path = include.page.url %}
         <ul class="visible-links" id="nav-links-js">
-          {% if current_path != "/" %}
-            <li class="masthead__menu-item"><a href="/">🏠 Home</a></li>
-          {% endif %}
-          {% for p in site.pages %}
-            {% assign first = p.path | split: "/" | first %}
-            {% assign filename = p.path | split: "/" | last %}
-            {% unless filename startswith "_" or p.url == current_path %}
-              {% if first == "_pages" %}
-                <li class="masthead__menu-item">
-                  <a href="{{ p.url }}">
-                    {% if p.button %}
-                      {{ p.button }}
-                    {% elsif p.title %}
-                      {{ p.title }}
-                    {% else %}
-                      {{ p.slug | capitalize }}
-                    {% endif %}
-                  </a>
-                </li>
-              {% endif %}
-            {% endunless %}
-          {% endfor %}
+        	{% if current_path != "/" %}
+        		<li class="masthead__menu-item"><a href="/">🏠 Home</a></li>
+        	{% endif %}
+        
+        	{% for p in site.pages %}
+        		{% assign first = p.path | split: "/" | first %}
+        		{% assign filename = p.path | split: "/" | last %}
+        
+        		{% assign underscore = filename | slice: 0, 1 %}
+        
+        		{% if first == "_pages" and p.url != current_path and underscore != "_" %}
+        			<li class="masthead__menu-item">
+        				<a href="{{ p.url }}">
+        					{% if p.button %}
+        						{{ p.button }}
+        					{% elsif p.title %}
+        						{{ p.title }}
+        					{% else %}
+        						{{ p.slug | capitalize }}
+        					{% endif %}
+        				</a>
+        			</li>
+        		{% endif %}
+        	{% endfor %}
         </ul>
         {% if site.search == true %}
         <button class="search__toggle" type="button">
