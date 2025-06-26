@@ -70,18 +70,25 @@ function addScore(initials, time) {
 
 // Function to load the leaderboard in a retro style
 function loadLeaderboard() {
-  const leaderboard = JSON.parse(localStorage.getItem("leaderboard") || "[]");
-  const leaderboardElement = document.getElementById("leaderboard");
+	const leaderboard = JSON.parse(localStorage.getItem("leaderboard") || "[]");
+	const leaderboardElement = document.getElementById("leaderboard");
 
-  if (leaderboard.length === 0) {
-    leaderboardElement.innerHTML = "No scores yet.";
-  } else {
-    leaderboardElement.innerHTML = "<pre>";  // Use <pre> for retro monospacing
-    leaderboard.forEach((score, index) => {
-      leaderboardElement.innerHTML += `${index + 1}. ${score.initials} - ${score.time}s\n`;
-    });
-    leaderboardElement.innerHTML += "</pre>";
-  }
+	if (leaderboard.length === 0) {
+		leaderboardElement.innerHTML = "No scores yet.";
+		return;
+	}
+
+	let content = `<pre>Rank  Name  Score\n`;
+
+	leaderboard.forEach((entry, index) => {
+		const rank = String(index + 1).padEnd(5, ' ');
+		const name = entry.initials.padEnd(6, ' ');
+		const time = `${entry.time}s`;
+		content += `${rank}${name}${time}\n`;
+	});
+
+	content += `</pre>`;
+	leaderboardElement.innerHTML = content;
 }
 
 // Function to show custom prompt for "Join the Team"
