@@ -10,10 +10,17 @@ window.onload = function () {
 	document.getElementById("add-score-btn").addEventListener("click", () => {
 		createPrompt("Enter your initials (3 letters):", "ABC", "Submit", (val) => {
 			if (!val || val.length !== 3) return alert("Exactly 3 letters, genius.");
+
+			// Block HTML injection
+			if (/</.test(val) || />/.test(val)) {
+				alert("Nice try.");
+				return;
+			}
+
 			const safeInitials = val.toUpperCase().replace(/[^A-Z]/g, "").slice(0, 3);
+			localStorage.setItem("latest_initials", safeInitials); // for highlight
 			addScore(safeInitials, totalTime);
-			localStorage.setItem("latest_initials", safeInitials); // so we can highlight it
-		}, true); // true = force uppercase & letter-only
+		}, true);
 	});
 
 	document.getElementById("join-team-btn").addEventListener("click", () => {
@@ -25,6 +32,7 @@ window.onload = function () {
 		adminBtn.addEventListener("click", () => {
 			if (confirm("Are you *really* sure you want to nuke the leaderboard?")) {
 				localStorage.removeItem("leaderboard");
+				localStorage.removeItem("latest_initials");
 				loadLeaderboard();
 			}
 		});
@@ -50,7 +58,6 @@ function createPrompt(title, placeholder, submitText, submitCallback, forceUpper
 	`;
 
 	document.body.appendChild(promptBox);
-
 	const inputEl = document.getElementById("custom-input");
 
 	if (forceUpperLetters) {
@@ -61,6 +68,13 @@ function createPrompt(title, placeholder, submitText, submitCallback, forceUpper
 
 	document.getElementById("submit-btn").onclick = () => {
 		const val = inputEl.value.trim();
+
+		// Sneaky tag check
+		if (/</.test(val) || />/.test(val)) {
+			alert("Nice try.");
+			return;
+		}
+
 		submitCallback(val);
 	};
 
@@ -72,7 +86,6 @@ function closePrompt() {
 	if (existing) existing.remove();
 }
 
-// Escape anything sneaky
 function escapeHTML(str) {
 	return str.replace(/[&<>"']/g, c => ({
 		'&': "&amp;",
@@ -124,6 +137,7 @@ function loadLeaderboard() {
 	const leaderboard = JSON.parse(localStorage.getItem("leaderboard") || "[]");
 	const leaderboardElement = document.getElementById("leaderboard");
 	const latest = localStorage.getItem("latest_initials");
+	const highlightEnabled = !!latest;
 
 	if (!leaderboard.length) {
 		leaderboardElement.innerHTML = "No scores yet.";
@@ -133,7 +147,7 @@ function loadLeaderboard() {
 	let content = `<pre>Rank    Name    Time    | Flappy  Pong    Space   Pacman  Tetris  | Total\n`;
 
 	leaderboard.forEach((entry, i) => {
-		const isYou = latest && entry.initials === latest;
+		const isYou = highlightEnabled && entry.initials === latest;
 		const tagOpen = isYou ? `<span class="highlight">` : ``;
 		const tagClose = isYou ? `</span>` : ``;
 
@@ -188,6 +202,7 @@ function showContactTogglePrompt() {
 
 	document.getElementById("submit-contact").onclick = () => {
 		const val = inputEl.value.trim();
+
 		if (!val) return alert("Try entering something this time.");
 
 		if (useDiscord) {
