@@ -10,6 +10,11 @@
 	border: 2px solid lime; /* Matching prompt border */
 }
 
+#leaderboard pre {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
 /* Custom prompt styling */
 .custom-prompt {
 	position: fixed;
@@ -61,3 +66,23 @@
 	transform: scale(0.98);
 	filter: brightness(0.95);
 }
+
+.custom-prompt .btn-group {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 10px;
+}
+
+.custom-prompt small {
+	display: block;
+	margin-top: 10px;
+	color: #0f05;
+	font-size: 14px;
+	font-style: italic;
+}
+
+.custom-prompt * {
+	font-family: 'Courier New', monospace;
+}
+
