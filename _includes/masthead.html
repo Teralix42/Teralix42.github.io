@@ -26,11 +26,8 @@
         
         	{% for p in site.pages %}
         		{% assign first = p.path | split: "/" | first %}
-        		{% assign filename = p.path | split: "/" | last %}
         
-        		{% assign underscore = filename | slice: 0, 1 %}
-        
-        		{% if first == "_pages" and p.url != current_path and underscore != "_" %}
+        		{% if first == "_pages" and p.url != current_path and p.button != "_" %}
         			<li class="masthead__menu-item">
         				<a href="{{ p.url }}">
         					{% if p.button %}
