@@ -86,3 +86,12 @@
 	font-family: 'Courier New', monospace;
 }
 
+/* Highlighted leaderboard row */
+#leaderboard .highlight {
+	display: inline-block;
+	width: 100%;
+	background-color: lime;
+	color: black;
+	font-weight: bold;
+	border-radius: 2px;
+}
