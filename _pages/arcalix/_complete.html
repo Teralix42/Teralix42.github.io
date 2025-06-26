@@ -1,0 +1,29 @@
+---
+layout: splash
+title: "Arcalix"
+permalink: /arcalix/complete/
+excerpt: "You've completed the trials!"
+---
+
+<script>
+	if (localStorage.getItem("arcalix_clearance") !== "true") {
+		window.location.href = "/arcalix/";
+	}
+</script>
+
+<section>
+	<h1>Trials cleared!</h1>
+	<p id="final-time">Your total time: ...</p>
+
+	<div class="arc-buttons">
+		<button id="add-score-btn">Add My Score</button>
+		<button id="join-team-btn">Join the Team</button>
+	</div>
+
+	<hr>
+
+	<h2>Nerds Who Made It</h2>
+	<div id="leaderboard">Loading leaderboard...</div>
+</section>
+
+<script src="/assets/js/arcalix-complete.js"></script>
