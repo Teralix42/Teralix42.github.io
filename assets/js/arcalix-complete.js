@@ -23,7 +23,7 @@ window.onload = function () {
 
 // Generic reusable prompt
 function createPrompt(title, placeholder, submitText, submitCallback) {
-	closePrompt(); // Kill duplicates
+	closePrompt();
 
 	const promptBox = document.createElement("div");
 	promptBox.className = "custom-prompt";
@@ -47,20 +47,32 @@ function createPrompt(title, placeholder, submitText, submitCallback) {
 	document.getElementById("cancel-btn").onclick = closePrompt;
 }
 
-// Close any existing prompt
 function closePrompt() {
 	const existing = document.querySelector('.custom-prompt');
 	if (existing) existing.remove();
 }
 
-// Leaderboard logic
+// Score logic
 function addScore(initials, time) {
 	const leaderboard = JSON.parse(localStorage.getItem("leaderboard") || "[]");
-	leaderboard.push({ initials, time });
+
+	// Placeholder for now — replace 0s with real scores when you have them
+	const entry = {
+		initials,
+		time,
+		flappy: parseInt(localStorage.getItem("flappy_score") || 0),
+		pong: parseInt(localStorage.getItem("pong_score") || 0),
+		space: parseInt(localStorage.getItem("space_score") || 0),
+		pacman: parseInt(localStorage.getItem("pacman_score") || 0),
+		tetris: parseInt(localStorage.getItem("tetris_score") || 0)
+	};
+
+	leaderboard.push(entry);
 	leaderboard.sort((a, b) => a.time - b.time);
 	localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
 	loadLeaderboard();
 	closePrompt();
+	showPopup("Score submitted!");
 }
 
 function loadLeaderboard() {
@@ -72,19 +84,29 @@ function loadLeaderboard() {
 		return;
 	}
 
-	let content = `<pre>Rank    Name    Score\n`;
-	leaderboard.forEach((entry, i) => {
-		const rank = `${i + 1}.`.padEnd(8, ' ');
-		const name = entry.initials.padEnd(8, ' ');
-		const score = `${entry.time}s`;
-		content += `${rank}${name}${score}\n`;
-	});
-	content += `</pre>`;
+	let content = `<pre>Rank    Name    Time  |  Flappy  Pong  Space  Pacman  Tetris    Total\n`;
 
+	leaderboard.forEach((entry, i) => {
+		const rank = `${i + 1}.`.padEnd(8);
+		const name = entry.initials.padEnd(8);
+		const time = `${entry.time}s`.padEnd(9);
+
+		const flappy = String(entry.flappy).padEnd(8);
+		const pong = String(entry.pong).padEnd(6);
+		const space = String(entry.space).padEnd(7);
+		const pacman = String(entry.pacman).padEnd(8);
+		const tetris = String(entry.tetris).padEnd(10);
+
+		const total = entry.flappy + entry.pong + entry.space + entry.pacman + entry.tetris;
+
+		content += `${rank}${name}${time}${flappy}${pong}${space}${pacman}${tetris}${total}\n`;
+	});
+
+	content += `</pre>`;
 	leaderboardElement.innerHTML = content;
 }
 
-// Email/Discord toggle prompt
+// Toggle prompt between email and Discord
 function showContactTogglePrompt() {
 	closePrompt();
 
@@ -95,7 +117,7 @@ function showContactTogglePrompt() {
 
 	promptBox.innerHTML = `
 		<h3 id="contact-title">Enter your email:</h3>
-		<input type="text" id="contact-input" placeholder="you@example.com" autofocus>
+		<input type="text" id="contact-input" placeholder="you@gmail.com" autofocus>
 		<div class="btn-group">
 			<button id="submit-contact">Submit</button>
 			<button id="cancel-contact">Cancel</button>
@@ -113,17 +135,40 @@ function showContactTogglePrompt() {
 	toggleBtn.onclick = () => {
 		useDiscord = !useDiscord;
 		titleEl.textContent = useDiscord ? "Enter your Discord username:" : "Enter your email:";
-		inputEl.placeholder = useDiscord ? "user#0000" : "you@example.com";
+		inputEl.placeholder = useDiscord ? "user#0000" : "you@gmail.com";
 		toggleBtn.textContent = useDiscord ? "Use Email Instead" : "Use Discord Instead";
 	};
 
 	document.getElementById("submit-contact").onclick = () => {
 		const val = inputEl.value.trim();
 		if (!val) return alert("Try entering something this time.");
+
+		if (useDiscord) {
+			// Simple Discord check (not perfect, just enough)
+			if (!/^.+#\d{4}$/.test(val)) return alert("That's not a Discord tag, Einstein.");
+		} else {
+      // Gmail/Hotmail mail check
+			if (!/@(gmail|hotmail)\.com$/i.test(val)) return alert("Only Gmail and Hotmail addresses are accepted, because reasons.");
+		}
+
 		localStorage.setItem("team_contact", val);
-		alert("You might hear from us. Maybe. Probably not.");
 		closePrompt();
+		showPopup("Contact info submitted!");
 	};
 
 	document.getElementById("cancel-contact").onclick = closePrompt;
+}
+
+// Basic popup
+function showPopup(message) {
+	const popup = document.createElement("div");
+	popup.className = "custom-popup";
+	popup.textContent = message;
+
+	document.body.appendChild(popup);
+	setTimeout(() => popup.classList.add("visible"), 10);
+	setTimeout(() => {
+		popup.classList.remove("visible");
+		setTimeout(() => popup.remove(), 500);
+	}, 2500);
 }
