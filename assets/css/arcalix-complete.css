@@ -67,28 +67,27 @@
 	box-shadow: 0 0 3px rgba(0, 255, 0, 0.3);
 }
 
-/* Button styling inside and outside prompt */
-button,
-.custom-prompt button {
-	margin: 5px;
+/* Buttons — black background, lime text + outline */
+button {
+	background-color: #000;
+	color: #0f0;
+	border: 2px solid #0f0;
+	font-family: 'Courier New', monospace;
+	border-radius: 5px;
 	padding: 10px 20px;
 	font-size: 18px;
-	background-color: #0f0;
-	color: black;
-	border: none;
-	border-radius: 5px;
 	cursor: pointer;
 	transition: transform 0.1s ease-in-out, filter 0.1s ease-in-out;
-	font-family: 'Courier New', monospace;
+	margin: 5px;
 }
 
 button:hover {
-	background-color: #0c0;
+	background-color: #111;
 }
 
 button:active {
 	transform: scale(0.98);
-	filter: brightness(0.95);
+	filter: brightness(1.2);
 }
 
 button:focus {
@@ -96,6 +95,34 @@ button:focus {
 	outline-offset: 2px;
 }
 
+
+/* Prompt buttons — lime background, black text */
+.custom-prompt button {
+	background-color: #0f0;
+	color: #000;
+	border: none;
+	border-radius: 5px;
+	padding: 10px 20px;
+	font-size: 18px;
+	cursor: pointer;
+	transition: transform 0.1s ease-in-out, filter 0.1s ease-in-out;
+	margin: 5px;
+	font-family: 'Courier New', monospace;
+}
+
+.custom-prompt button:hover {
+	background-color: #0c0;
+}
+
+.custom-prompt button:active {
+	transform: scale(0.98);
+	filter: brightness(0.95);
+}
+
+.custom-prompt button:focus {
+	outline: 2px solid #0f0;
+	outline-offset: 2px;
+}
 .custom-prompt .btn-group {
 	display: flex;
 	flex-wrap: wrap;
