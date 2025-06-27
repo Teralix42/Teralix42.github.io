@@ -1,87 +1,113 @@
-// Real Flappy Bird clone with assets
-let bird, bg, pipeNorth, pipeSouth;
-let gap = 120, constant;
-let pipe = [];
+let flappyCtx, flappyCanvas;
+let birdImg, bgImg, pipeTopImg, pipeBottomImg;
+let pipes = [];
+let bird = { x: 50, y: 150, velocity: 0 };
 let score = 0;
-let bestScore = 0;
 let gravity = 1.5;
-let fly = -25;
-let fps = 60;
+let gap = 120;
+let gameLoopId = null;
+let imagesLoaded = 0;
 
-// Load images
-function loadImages() {
-  bg = new Image(); bg.src = '/assets/images/background.png';
-  bird = new Image(); bird.src = '/assets/images/yellowbird-midflap.png';
-  pipeNorth = new Image(); pipeNorth.src = '/assets/images/down.png';
-  pipeSouth = new Image(); pipeSouth.src = '/assets/images/pipe-green.png';
-}
-
-// Start Flappy game
 function initFlappyGame() {
-  loadImages();
-  const cvs = document.getElementById('gameCanvas');
-  const ctx = cvs.getContext('2d');
+	flappyCanvas = document.getElementById("gameCanvas");
+	flappyCtx = flappyCanvas.getContext("2d");
 
-  let birdX = 50, birdY = cvs.height / 2;
-  let velocity = 0;
-  let pipeW = 80;
-  
-  constant = pipeNorth.height + gap;
+	// Load all images
+	bgImg = new Image();
+	birdImg = new Image();
+	pipeTopImg = new Image();
+	pipeBottomImg = new Image();
 
-  pipe[0] = { x: cvs.width, y: -Math.floor(Math.random() * pipeNorth.height) };
+	bgImg.src = "/assets/images/background.png";
+	birdImg.src = "/assets/images/yellowbird-midflap.png";
+	pipeTopImg.src = "/assets/images/down.png";
+	pipeBottomImg.src = "/assets/images/pipe-green.png";
 
-  document.addEventListener('keydown', flap);
-  document.addEventListener('click', flap);
-
-  const gameLoop = setInterval(() => {
-    ctx.drawImage(bg, 0, 0);
-
-    for (let i = 0; i < pipe.length; i++) {
-      ctx.drawImage(pipeNorth, pipe[i].x, pipe[i].y);
-      ctx.drawImage(pipeSouth, pipe[i].x, pipe[i].y + constant);
-
-      pipe[i].x--;
-
-      if (pipe[i].x === cvs.width - pipeW - 200) {
-        const y = -Math.floor(Math.random() * pipeNorth.height);
-        pipe.push({ x: cvs.width, y: y });
-      }
-
-      // Collision detection
-      if (
-        birdX + bird.width >= pipe[i].x && birdX <= pipe[i].x + pipeW &&
-        (birdY <= pipe[i].y + pipeNorth.height || birdY + bird.height >= pipe[i].y + constant)
-        || birdY + bird.height >= cvs.height
-        || birdY <= 0
-      ) {
-        clearInterval(gameLoop);
-        endFlappyGame();
-      }
-
-      // Score logic
-      if (pipe[i].x + pipeW === birdX) {
-        score++;
-      }
-    }
-
-    ctx.drawImage(bird, birdX, birdY);
-    birdY += velocity;
-    velocity += gravity;
-
-    ctx.fillStyle = '#000';
-    ctx.font = '20px Courier New';
-    ctx.fillText('Score: ' + score, 10, cvs.height - 20);
-  }, 1000 / fps);
+	bgImg.onload = birdImg.onload = pipeTopImg.onload = pipeBottomImg.onload = function () {
+		imagesLoaded++;
+		if (imagesLoaded === 4) startFlappy();
+	};
 }
 
-// Bird flap handler
+function startFlappy() {
+	bird.y = flappyCanvas.height / 2;
+	bird.velocity = 0;
+	score = 0;
+	pipes = [{ x: flappyCanvas.width, y: randomY() }];
+
+	document.addEventListener("keydown", flap);
+	document.addEventListener("click", flap);
+
+	gameLoopId = setInterval(flappyLoop, 1000 / 60);
+}
+
 function flap() {
-  velocity = fly;
+	bird.velocity = -20;
 }
 
-// On death, store score/time and clean up
-function endFlappyGame() {
-  const timeTaken = (Date.now() - startTime) / 1000;
-  localStorage.setItem('flappy_score', score);
-  completeCurrentGame();
+function flappyLoop() {
+	// Clear + draw background
+	flappyCtx.drawImage(bgImg, 0, 0);
+
+	// Pipes
+	for (let i = 0; i < pipes.length; i++) {
+		let p = pipes[i];
+		let bottomY = p.y + pipeTopImg.height + gap;
+
+		flappyCtx.drawImage(pipeTopImg, p.x, p.y);
+		flappyCtx.drawImage(pipeBottomImg, p.x, bottomY);
+
+		p.x -= 2;
+
+		// New pipe
+		if (p.x === 250) pipes.push({ x: flappyCanvas.width, y: randomY() });
+
+		// Collision
+		if (
+			bird.x + birdImg.width > p.x &&
+			bird.x < p.x + pipeTopImg.width &&
+			(bird.y < p.y + pipeTopImg.height || bird.y + birdImg.height > bottomY)
+		) {
+			endFlappy();
+			return;
+		}
+	}
+
+	// Bird physics
+	bird.velocity += gravity;
+	bird.y += bird.velocity;
+
+	// Bird + ground or ceiling = death
+	if (bird.y + birdImg.height >= flappyCanvas.height || bird.y <= 0) {
+		endFlappy();
+		return;
+	}
+
+	flappyCtx.drawImage(birdImg, bird.x, bird.y);
+
+	// Score update (based on pipe passed)
+	for (let i = 0; i < pipes.length; i++) {
+		if (pipes[i].x + pipeTopImg.width === bird.x) score++;
+	}
+
+	flappyCtx.fillStyle = "#0f0";
+	flappyCtx.font = "24px monospace";
+	flappyCtx.fillText("Score: " + score, 10, 30);
+}
+
+function randomY() {
+	return Math.floor(Math.random() * -pipeTopImg.height);
+}
+
+function endFlappy() {
+	clearInterval(gameLoopId);
+	document.removeEventListener("keydown", flap);
+	document.removeEventListener("click", flap);
+
+	// placeholder score calc
+	const timeTaken = (Date.now() - startTime) / 1000;
+	const scoreVal = Math.floor((score * 100) / timeTaken);
+	localStorage.setItem("flappy_score", scoreVal);
+
+	completeCurrentGame();
 }
