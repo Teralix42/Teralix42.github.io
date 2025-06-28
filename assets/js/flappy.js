@@ -6,8 +6,8 @@ let bgImg = new Image(),
 	pipeImg = new Image(),
 	baseImg = new Image();
 
-let bird = { x: 50, y: 200, width: 34, height: 24, velocity: 0, frame: 0, frameCount: 0 };
-let gravity = 1.2, flapForce = -15;
+let bird = { x: 50, y: 250, width: 34, height: 24, velocity: 0, frame: 0, frameCount: 0 };
+let gravity = 1.0, flapForce = -14;
 let pipes = [];
 let pipeGap = 100, pipeWidth = 52;
 let bgX = 0, baseX = 0, bgSpeed = 1, baseSpeed = 2;
@@ -69,6 +69,7 @@ function startOnFlap(e) {
 		waitingForStart = false;
 		document.removeEventListener("keydown", startOnFlap);
 		document.removeEventListener("click", startOnFlap);
+    flap();
 		startFlappy();
 	}
 }
