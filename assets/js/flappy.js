@@ -11,7 +11,7 @@ let bird = { x: 50, y: 200, width: 34, height: 24, velocity: 0, frame: 0, frameC
 let gravity = 1.2, flapForce = -15;
 let pipes = [];
 let pipeGap = 100, pipeWidth = 52;
-let bgX = 0, bgSpeed = 1;
+let bgX = 0, baseX = 0, bgSpeed = 1, baseSpeed = 2;
 let score = 0;
 let gameLoopId;
 let assetsLoaded = 0;
@@ -106,8 +106,10 @@ function gameLoop() {
   }
   ctx.drawImage(birdImgs[bird.frame], bird.x, bird.y);
 
-  // Draw floor
-  ctx.drawImage(baseImg, 0, HEIGHT - baseImg.height);
+  // Draw floor (scrolling)
+  baseX = (baseX - baseSpeed) % WIDTH;
+  ctx.drawImage(baseImg, baseX, HEIGHT - baseImg.height);
+  ctx.drawImage(baseImg, baseX + WIDTH, HEIGHT - baseImg.height);
 
   // Score
   ctx.fillStyle = "#FFF";
@@ -126,7 +128,7 @@ function endFlappy() {
 		localStorage.setItem("flappy_score", finalScore);
 		completeCurrentGame();
 	} else {
-		alert("You need at least 5 pipes to pass. Try again, champ.");
-		startFlappy(); // restart the level
+		// Restart quietly, no alert
+		startFlappy(); 
 	}
 }
