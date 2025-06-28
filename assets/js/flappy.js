@@ -48,12 +48,12 @@ function loadAssets() {
 	mid.onload = onLoad;
 	down.onload = onLoad;
 
-	bgImg.src = "/assets/images/background-day.png";
-	pipeImg.src = "/assets/images/pipe.png";
-	baseImg.src = "/assets/images/base.png";
-	up.src = "/assets/images/up-flap.png";
-	mid.src = "/assets/images/mid-flap.png";
-	down.src = "/assets/images/down-flap.png";
+	bgImg.src = "/assets/images/flappy/background-night.png";
+	pipeImg.src = "/assets/images/flappy/pipe.png";
+	baseImg.src = "/assets/images/flappy/base.png";
+	up.src = "/assets/images/flappy/up-flap.png";
+	mid.src = "/assets/images/flappy/mid-flap.png";
+	down.src = "/assets/images/flappy/down-flap.png";
 }
 
 function waitForFlap() {
