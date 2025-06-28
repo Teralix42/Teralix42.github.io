@@ -12,21 +12,29 @@ function initFlappyGame() {
 	flappyCanvas = document.getElementById("gameCanvas");
 	flappyCtx = flappyCanvas.getContext("2d");
 
-	// Load all images
+	loadAssetsAndStart();
+}
+
+function loadAssetsAndStart() {
 	bgImg = new Image();
 	birdImg = new Image();
 	pipeTopImg = new Image();
 	pipeBottomImg = new Image();
 
-	bgImg.src = "/assets/images/background.png";
-	birdImg.src = "/assets/images/yellowbird-midflap.png";
-	pipeTopImg.src = "/assets/images/down.png";
-	pipeBottomImg.src = "/assets/images/pipe-green.png";
-
-	bgImg.onload = birdImg.onload = pipeTopImg.onload = pipeBottomImg.onload = function () {
+	const onAssetLoad = () => {
 		imagesLoaded++;
 		if (imagesLoaded === 4) startFlappy();
 	};
+
+	bgImg.onload = onAssetLoad;
+	birdImg.onload = onAssetLoad;
+	pipeTopImg.onload = onAssetLoad;
+	pipeBottomImg.onload = onAssetLoad;
+
+	bgImg.src = "/assets/images/background-day.png";
+	birdImg.src = "/assets/images/yellowbird-midflap.png";
+	pipeTopImg.src = "/assets/images/down.png";
+	pipeBottomImg.src = "/assets/images/pipe-green.png";
 }
 
 function startFlappy() {
