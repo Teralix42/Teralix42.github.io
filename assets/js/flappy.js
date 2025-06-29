@@ -191,8 +191,8 @@ function drawScore() {
 }
 
 function randomPipeY() {
-  const min = baseImg.height + 50 + pipeGap;
-  const max = HEIGHT - 50;
+  const min = HEIGHT - (HEIGHT - 50); //substract necessary spacing, y coordinates go downwards
+  const max = HEIGHT - (baseImg.height + 50 + pipeGap);
   const bottom = Math.random() * (Math.abs(max-min)) + min;
   return bottom - pipeImg.height;
 }
