@@ -191,8 +191,8 @@ function drawScore() {
 }
 
 function randomPipeY() {
-  const min = HEIGHT - baseImg.height - pipeGap - 462;
-  const max = HEIGHT - baseImg.height - pipeGap - 250;
+  const min = baseImg.height + 50 + pipeGap;
+  const max = HEIGHT - 50;
   const bottom = Math.random() * (Math.abs(max-min)) + min;
   return bottom - pipeImg.height;
 }
