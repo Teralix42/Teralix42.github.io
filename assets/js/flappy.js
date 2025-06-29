@@ -30,11 +30,13 @@ function initFlappyGame() {
 	loadAssets();
 }
 
+let digitImgs = [];
+
 function loadAssets() {
-	const totalAssets = 5;
+	const totalAssets = 16; // 3 bird + 1 bg + 1 pipe + 1 base + 10 digits
 	let loaded = 0;
 
-	const onLoad = () => {
+	const onLoad = () => {&
 		loaded++;
 		if (loaded === totalAssets) waitForFlap();
 	};
@@ -55,6 +57,14 @@ function loadAssets() {
 	up.src = "/assets/images/flappy/up-flap.png";
 	mid.src = "/assets/images/flappy/mid-flap.png";
 	down.src = "/assets/images/flappy/down-flap.png";
+
+	// Load digit images (0–9)
+	for (let i = 0; i < 10; i++) {
+		const img = new Image();
+		img.onload = onLoad;
+		img.src = `/assets/images/flappy/${i}.png`;
+		digitImgs.push(img);
+	}
 }
 
 function waitForFlap() {
@@ -154,9 +164,18 @@ function gameLoop(timestamp) {
 	ctx.drawImage(baseImg, baseX, HEIGHT - baseImg.height);
 	ctx.drawImage(baseImg, baseX + WIDTH, HEIGHT - baseImg.height);
 
-	ctx.fillStyle = "#FFF";
-	ctx.font = "30px Courier New";
-	ctx.fillText(score, WIDTH / 2 - 10, 50);
+	drawScore();
+}
+
+function drawScore() {
+	const digits = String(score).split('');
+	const totalWidth = digits.length * digitImgs[0].width;
+	let x = (WIDTH - totalWidth) / 2;
+
+	for (let d of digits) {
+		ctx.drawImage(digitImgs[+d], x, 20); // 20px from top
+		x += digitImgs[0].width;
+	}
 }
 
 function drawFrame() {
