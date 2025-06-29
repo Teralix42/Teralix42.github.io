@@ -7,8 +7,8 @@ let bgImg = new Image(),
 	baseImg = new Image(),
 	digitImgs = [];
 
-let bird = { x: 50, y: 250, width: 34, height: 24, velocity: 0, frame: 0, frameCount: 0 };
-let gravity = 1.0, flapForce = -14;
+let bird = { x: 50, y: 300, width: 34, height: 24, velocity: 0, frame: 0, frameCount: 0 };
+let gravity = 0.5, flapForce = -7;
 let pipes = [];
 let pipeGap = 100, pipeWidth = 52;
 let bgX = 0, baseX = 0, bgSpeed = 1, baseSpeed = 2;
@@ -30,7 +30,7 @@ function initFlappyGame() {
 }
 
 function loadAssets() {
-	const totalAssets = 16; // 3 bird + 1 bg + 1 pipe + 1 base + 10 digits
+	const totalAssets = 16;
 	let loaded = 0;
 
 	const loadingDiv = document.createElement("div");
@@ -58,9 +58,7 @@ function loadAssets() {
 
 	const up = new Image(), mid = new Image(), down = new Image();
 	birdImgs = [up, mid, down];
-	up.onload = onLoad;
-	mid.onload = onLoad;
-	down.onload = onLoad;
+	up.onload = mid.onload = down.onload = onLoad;
 
 	bgImg.src = "/assets/images/flappy/background-night.png";
 	pipeImg.src = "/assets/images/flappy/pipe.png";
@@ -69,7 +67,6 @@ function loadAssets() {
 	mid.src = "/assets/images/flappy/mid-flap.png";
 	down.src = "/assets/images/flappy/down-flap.png";
 
-	// Load digit images (0–9)
 	for (let i = 0; i < 10; i++) {
 		const img = new Image();
 		img.onload = onLoad;
@@ -103,8 +100,7 @@ function resetGame() {
 	bird.frameCount = 0;
 	score = 0;
 	pipes = [{ x: WIDTH, y: randomPipeY() }];
-	bgX = 0;
-	baseX = 0;
+	bgX = baseX = 0;
 }
 
 function startFlappy() {
@@ -116,8 +112,7 @@ function startFlappy() {
 }
 
 function flap() {
-	if (!isRunning) return;
-	bird.velocity = flapForce;
+	if (isRunning) bird.velocity = flapForce;
 }
 
 function gameLoop(timestamp) {
@@ -134,9 +129,7 @@ function updateGame(delta) {
 	bgX = (bgX - bgSpeed) % WIDTH;
 	baseX = (baseX - baseSpeed) % WIDTH;
 
-	for (let p of pipes) {
-		p.x -= 2;
-	}
+	for (let p of pipes) p.x -= 2;
 
 	const lastPipe = pipes[pipes.length - 1];
 	if (lastPipe.x === WIDTH - pipeWidth - 100) {
@@ -144,23 +137,19 @@ function updateGame(delta) {
 	}
 
 	for (let p of pipes) {
-		let bottomY = p.y + pipeImg.height + pipeGap;
+		const bottomY = p.y + pipeImg.height + pipeGap;
 
 		if (
 			bird.x + bird.width > p.x &&
 			bird.x < p.x + pipeWidth &&
 			(bird.y < p.y + pipeImg.height || bird.y + bird.height > bottomY)
-		) {
-			return endFlappy();
-		}
+		) return endFlappy();
 	}
 
-	if (bird.y + bird.height >= HEIGHT - baseImg.height || bird.y <= 0) {
-		return endFlappy();
-	}
+	if (bird.y + bird.height >= HEIGHT - baseImg.height || bird.y <= 0) return endFlappy();
 
-	for (let i = 0; i < pipes.length; i++) {
-		if (pipes[i].x + pipeWidth === bird.x) score++;
+	for (let p of pipes) {
+		if (p.x + pipeWidth === bird.x) score++;
 	}
 
 	bird.velocity += gravity * delta;
@@ -180,19 +169,28 @@ function drawGame() {
 	ctx.drawImage(bgImg, bgX + WIDTH, 0);
 
 	for (let p of pipes) {
-		let bottomY = p.y + pipeImg.height + pipeGap;
+		const bottomY = p.y + pipeImg.height + pipeGap;
 
+		// Top pipe (flipped)
 		ctx.save();
 		ctx.translate(p.x + pipeWidth / 2, p.y + pipeImg.height / 2);
 		ctx.scale(1, -1);
 		ctx.drawImage(pipeImg, -pipeWidth / 2, -pipeImg.height / 2);
 		ctx.restore();
 
+		// Bottom pipe
 		ctx.drawImage(pipeImg, p.x, bottomY);
 	}
 
-	ctx.drawImage(birdImgs[bird.frame], bird.x, bird.y);
+	// Rotate bird based on velocity
+	ctx.save();
+	ctx.translate(bird.x + bird.width / 2, bird.y + bird.height / 2);
+	const angle = Math.min(Math.max(bird.velocity / 10, -0.6), 1.2);
+	ctx.rotate(angle);
+	ctx.drawImage(birdImgs[bird.frame], -bird.width / 2, -bird.height / 2);
+	ctx.restore();
 
+	// Base
 	ctx.drawImage(baseImg, baseX, HEIGHT - baseImg.height);
 	ctx.drawImage(baseImg, baseX + WIDTH, HEIGHT - baseImg.height);
 
@@ -238,10 +236,13 @@ function endFlappy() {
 		localStorage.setItem("flappy_score", finalScore);
 		completeCurrentGame();
 	} else {
-		waitForFlap();
+		waitForFlap(); // retry if you suck
 	}
 }
 
 function randomPipeY() {
-	return Math.random() * (HEIGHT - pipeGap - pipeImg.height) - pipeImg.height;
+	const maxBottom = HEIGHT - baseImg.height - pipeGap - 50;
+	const minBottom = 250;
+	const pipeBottom = Math.floor(Math.random() * (maxBottom - minBottom)) + minBottom;
+	return pipeBottom - pipeImg.height;
 }
