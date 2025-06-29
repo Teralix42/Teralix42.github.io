@@ -4,7 +4,8 @@ const WIDTH = 288, HEIGHT = 512;
 let bgImg = new Image(),
 	birdImgs = [],
 	pipeImg = new Image(),
-	baseImg = new Image();
+	baseImg = new Image(),
+	digitImgs = [];
 
 let bird = { x: 50, y: 250, width: 34, height: 24, velocity: 0, frame: 0, frameCount: 0 };
 let gravity = 1.0, flapForce = -14;
@@ -12,10 +13,8 @@ let pipes = [];
 let pipeGap = 100, pipeWidth = 52;
 let bgX = 0, baseX = 0, bgSpeed = 1, baseSpeed = 2;
 let score = 0;
-let gameLoopId;
 let isRunning = false;
 let waitingForStart = false;
-let assetsLoaded = 0;
 let lastTime = 0;
 
 function initFlappyGame() {
@@ -30,15 +29,27 @@ function initFlappyGame() {
 	loadAssets();
 }
 
-let digitImgs = [];
-
 function loadAssets() {
 	const totalAssets = 16; // 3 bird + 1 bg + 1 pipe + 1 base + 10 digits
 	let loaded = 0;
 
-	const onLoad = () => {&
+	const loadingDiv = document.createElement("div");
+	loadingDiv.style.color = "white";
+	loadingDiv.style.fontFamily = "monospace";
+	loadingDiv.style.textAlign = "center";
+	loadingDiv.style.marginTop = "10px";
+	loadingDiv.innerText = "Loading: 0%";
+	document.body.appendChild(loadingDiv);
+
+	const onLoad = () => {
 		loaded++;
-		if (loaded === totalAssets) waitForFlap();
+		const percent = Math.floor((loaded / totalAssets) * 100);
+		loadingDiv.innerText = `Loading: ${percent}%`;
+
+		if (loaded === totalAssets) {
+			document.body.removeChild(loadingDiv);
+			waitForFlap();
+		}
 	};
 
 	bgImg.onload = onLoad;
@@ -80,7 +91,7 @@ function startOnFlap(e) {
 		waitingForStart = false;
 		document.removeEventListener("keydown", startOnFlap);
 		document.removeEventListener("click", startOnFlap);
-    bird.velocity = flapForce;
+		bird.velocity = flapForce;
 		startFlappy();
 	}
 }
@@ -100,7 +111,8 @@ function startFlappy() {
 	isRunning = true;
 	document.addEventListener("keydown", flap);
 	document.addEventListener("click", flap);
-	gameLoopId = setInterval(gameLoop, 1000 / 60);
+	lastTime = performance.now();
+	requestAnimationFrame(gameLoop);
 }
 
 function flap() {
@@ -109,28 +121,30 @@ function flap() {
 }
 
 function gameLoop(timestamp) {
-  bgX = (bgX - bgSpeed) % WIDTH;
-	ctx.drawImage(bgImg, bgX, 0);
-	ctx.drawImage(bgImg, bgX + WIDTH, 0);
+	const delta = (timestamp - lastTime) / (1000 / 60);
+	lastTime = timestamp;
+
+	updateGame(delta);
+	drawGame();
+
+	if (isRunning) requestAnimationFrame(gameLoop);
+}
+
+function updateGame(delta) {
+	bgX = (bgX - bgSpeed) % WIDTH;
+	baseX = (baseX - baseSpeed) % WIDTH;
+
+	for (let p of pipes) {
+		p.x -= 2;
+	}
+
+	const lastPipe = pipes[pipes.length - 1];
+	if (lastPipe.x === WIDTH - pipeWidth - 100) {
+		pipes.push({ x: WIDTH, y: randomPipeY() });
+	}
 
 	for (let p of pipes) {
 		let bottomY = p.y + pipeImg.height + pipeGap;
-
-		// Top pipe (flipped)
-		ctx.save();
-		ctx.translate(p.x + pipeWidth / 2, p.y + pipeImg.height / 2);
-		ctx.scale(1, -1);
-		ctx.drawImage(pipeImg, -pipeWidth / 2, -pipeImg.height / 2);
-		ctx.restore();
-
-		// Bottom pipe (normal)
-		ctx.drawImage(pipeImg, p.x, bottomY);
-
-		p.x -= 2;
-
-		if (p.x === WIDTH - pipeWidth - 100) {
-			pipes.push({ x: WIDTH, y: randomPipeY() });
-		}
 
 		if (
 			bird.x + bird.width > p.x &&
@@ -149,18 +163,36 @@ function gameLoop(timestamp) {
 		if (pipes[i].x + pipeWidth === bird.x) score++;
 	}
 
-	bird.velocity += gravity;
+	bird.velocity += gravity * delta;
 	bird.y += bird.velocity;
 
 	bird.frameCount++;
-	if (bird.frameCount === 5) {
+	if (bird.frameCount >= 5) {
 		bird.frame = (bird.frame + 1) % birdImgs.length;
 		bird.frameCount = 0;
+	}
+}
+
+function drawGame() {
+	ctx.clearRect(0, 0, WIDTH, HEIGHT);
+
+	ctx.drawImage(bgImg, bgX, 0);
+	ctx.drawImage(bgImg, bgX + WIDTH, 0);
+
+	for (let p of pipes) {
+		let bottomY = p.y + pipeImg.height + pipeGap;
+
+		ctx.save();
+		ctx.translate(p.x + pipeWidth / 2, p.y + pipeImg.height / 2);
+		ctx.scale(1, -1);
+		ctx.drawImage(pipeImg, -pipeWidth / 2, -pipeImg.height / 2);
+		ctx.restore();
+
+		ctx.drawImage(pipeImg, p.x, bottomY);
 	}
 
 	ctx.drawImage(birdImgs[bird.frame], bird.x, bird.y);
 
-	baseX = (baseX - baseSpeed) % WIDTH;
 	ctx.drawImage(baseImg, baseX, HEIGHT - baseImg.height);
 	ctx.drawImage(baseImg, baseX + WIDTH, HEIGHT - baseImg.height);
 
@@ -173,19 +205,20 @@ function drawScore() {
 	let x = (WIDTH - totalWidth) / 2;
 
 	for (let d of digits) {
-		ctx.drawImage(digitImgs[+d], x, 20); // 20px from top
+		ctx.drawImage(digitImgs[+d], x, 20);
 		x += digitImgs[0].width;
 	}
 }
 
 function drawFrame() {
 	bgX = (bgX - bgSpeed) % WIDTH;
+	baseX = (baseX - baseSpeed) % WIDTH;
+
+	ctx.clearRect(0, 0, WIDTH, HEIGHT);
 	ctx.drawImage(bgImg, bgX, 0);
 	ctx.drawImage(bgImg, bgX + WIDTH, 0);
+	ctx.drawImage(birdImgs[1], bird.x, bird.y);
 
-	ctx.drawImage(birdImgs[1], bird.x, bird.y); // mid-flap frame
-
-	baseX = (baseX - baseSpeed) % WIDTH;
 	ctx.drawImage(baseImg, baseX, HEIGHT - baseImg.height);
 	ctx.drawImage(baseImg, baseX + WIDTH, HEIGHT - baseImg.height);
 
@@ -195,7 +228,6 @@ function drawFrame() {
 }
 
 function endFlappy() {
-	clearInterval(gameLoopId);
 	isRunning = false;
 	document.removeEventListener("keydown", flap);
 	document.removeEventListener("click", flap);
