@@ -1,5 +1,5 @@
-// Redirect if trials weren't completed
-if (localStorage.getItem("arcalix_clearance") !== "true") {
+// Redirect if trials weren't completed and you aren't a bot
+if (!navigator.userAgent.includes("Googlebot") && localStorage.getItem("arcalix_clearance") !== "true") {
 	window.location.href = "/arcalix/";
 }
 
